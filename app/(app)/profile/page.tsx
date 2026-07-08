@@ -3,6 +3,7 @@ import { requireServerUser } from '@/lib/auth';
 import { ProfileForm } from '@/features/profile/components/ProfileForm';
 import { SignOutButton } from '@/features/profile/components/SignOutButton';
 import { StatsGrid } from '@/features/stats/components/StatsGrid';
+import { InvitePartnerCard } from '@/features/couple/components/InvitePartnerCard';
 
 export const metadata: Metadata = { title: 'Profile — Travel Memories' };
 
@@ -20,6 +21,8 @@ export default async function ProfilePage() {
       </div>
 
       <StatsGrid />
+
+      <InvitePartnerCard currentUserId={user.id} />
 
       <ProfileForm
         user={{

@@ -6,4 +6,6 @@ export const queryKeys = {
   tags: ['tags'] as const,
   stats: ['stats'] as const,
   search: (query: string, filters: string) => ['search', query, filters] as const,
+  couple: ['couple'] as const,
+  coupleInvite: ['couple', 'invite'] as const,
 };

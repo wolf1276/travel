@@ -11,6 +11,8 @@
 -- (e.g. via the Supabase SQL editor, or `psql "$DIRECT_URL" -f prisma/rls.sql`).
 
 alter table public.users enable row level security;
+alter table public.couples enable row level security;
+alter table public.couple_invites enable row level security;
 alter table public.places enable row level security;
 alter table public.visits enable row level security;
 alter table public.photos enable row level security;
@@ -21,6 +23,33 @@ create policy "Users read/update their own row" on public.users
   for all
   using (auth.uid()::text = id)
   with check (auth.uid()::text = id);
+
+create policy "Users read their own couple" on public.couples
+  for select
+  using (
+    exists (
+      select 1 from public.users
+      where users.couple_id = couples.id
+        and users.id = auth.uid()::text
+    )
+  );
+
+create policy "Users manage invites for their own couple" on public.couple_invites
+  for all
+  using (
+    exists (
+      select 1 from public.users
+      where users.couple_id = couple_invites.couple_id
+        and users.id = auth.uid()::text
+    )
+  )
+  with check (
+    exists (
+      select 1 from public.users
+      where users.couple_id = couple_invites.couple_id
+        and users.id = auth.uid()::text
+    )
+  );
 
 create policy "Users manage their own places" on public.places
   for all

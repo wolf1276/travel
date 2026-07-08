@@ -21,16 +21,21 @@ export async function getServerUser(): Promise<User | null> {
 
   const metadata = authUser.user_metadata as Record<string, unknown>;
 
-  return prisma.user.upsert({
-    where: { id: authUser.id },
-    update: {},
-    create: {
-      id: authUser.id,
-      email: authUser.email ?? '',
-      displayName:
-        (metadata.full_name as string | undefined) ?? (metadata.name as string | undefined) ?? null,
-      avatarUrl: (metadata.avatar_url as string | undefined) ?? null,
-    },
+  return prisma.$transaction(async (tx) => {
+    const couple = await tx.couple.create({ data: {} });
+
+    return tx.user.upsert({
+      where: { id: authUser.id },
+      update: {},
+      create: {
+        id: authUser.id,
+        email: authUser.email ?? '',
+        displayName:
+          (metadata.full_name as string | undefined) ?? (metadata.name as string | undefined) ?? null,
+        avatarUrl: (metadata.avatar_url as string | undefined) ?? null,
+        coupleId: couple.id,
+      },
+    });
   });
 }
 

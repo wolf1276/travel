@@ -13,6 +13,12 @@ enum PlaceStatus {
   VISITED
 }
 
+enum CoupleInviteStatus {
+  PENDING
+  ACCEPTED
+  REVOKED
+}
+
 /// Mirrors the Supabase `auth.users` row for the same id. Created on first
 /// sign-in (see lib/auth.ts). Kept separate from auth.users so app-specific
 /// profile fields can evolve without touching Supabase's managed table.
@@ -22,6 +28,8 @@ model User {
   displayName String?  @map("display_name")
   avatarUrl   String?  @map("avatar_url")
   bio         String?
+  coupleId    String   @map("couple_id")
+  couple      Couple   @relation(fields: [coupleId], references: [id])
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
@@ -30,7 +38,45 @@ model User {
   photos Photo[]
   tags   Tag[]
 
+  sentInvites     CoupleInvite[] @relation("InvitesSent")
+  acceptedInvites CoupleInvite[] @relation("InvitesAccepted")
+
   @@map("users")
+}
+
+/// Exactly two Users share one Couple. A solo Couple is created for every
+/// User on first sign-in (see lib/auth.ts); accepting a CoupleInvite moves
+/// the accepting User into the inviter's Couple. Shared resources (places,
+/// visits, photos) will attach to Couple starting in Phase 2.
+model Couple {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+
+  members User[]
+  invites CoupleInvite[]
+
+  @@map("couples")
+}
+
+/// A one-time shareable link a User sends their partner. Accepting it moves
+/// the accepting User into the inviter's Couple (see
+/// app/api/couple/invites/[token]/accept/route.ts). Only one PENDING invite
+/// is kept active per Couple at a time.
+model CoupleInvite {
+  id           String             @id @default(uuid())
+  coupleId     String             @map("couple_id")
+  couple       Couple             @relation(fields: [coupleId], references: [id], onDelete: Cascade)
+  invitedById  String             @map("invited_by_id")
+  invitedBy    User               @relation("InvitesSent", fields: [invitedById], references: [id], onDelete: Cascade)
+  token        String             @unique
+  status       CoupleInviteStatus @default(PENDING)
+  expiresAt    DateTime           @map("expires_at")
+  acceptedById String?            @map("accepted_by_id")
+  acceptedBy   User?              @relation("InvitesAccepted", fields: [acceptedById], references: [id])
+  createdAt    DateTime           @default(now()) @map("created_at")
+
+  @@index([coupleId])
+  @@map("couple_invites")
 }
 
 /// A saved destination. Doubles as a "want to visit" wishlist item until it
