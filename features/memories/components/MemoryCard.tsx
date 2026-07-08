@@ -4,13 +4,16 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
-import { Camera, ImageOff } from 'lucide-react';
+import { Camera, ImageOff, UserRound } from 'lucide-react';
 import { RatingStars } from '@/components/common/RatingStars';
+import { useCouple } from '@/hooks/useCouple';
 import type { PlaceListItem } from '@/types/place';
 
 export function MemoryCard({ place }: { place: PlaceListItem }) {
   const visit = place.visit;
   const coverUrl = visit?.favoritePhotoUrl ?? place.coverImageUrl;
+  const { data: couple } = useCouple();
+  const showAddedBy = (couple?.members.length ?? 0) > 1;
 
   return (
     <motion.div
@@ -54,6 +57,12 @@ export function MemoryCard({ place }: { place: PlaceListItem }) {
             )}
           </div>
           <p className="text-sm text-muted-foreground">{place.country}</p>
+          {showAddedBy && (
+            <p className="flex items-center gap-1 text-xs text-muted-foreground">
+              <UserRound className="h-3 w-3" />
+              Added by {place.addedBy.displayName ?? place.addedBy.email}
+            </p>
+          )}
           {visit && <RatingStars value={visit.rating} size="sm" />}
           {visit?.journal && (
             <p className="line-clamp-2 text-sm text-muted-foreground/90">{visit.journal}</p>

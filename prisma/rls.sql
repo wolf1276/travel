@@ -51,10 +51,22 @@ create policy "Users manage invites for their own couple" on public.couple_invit
     )
   );
 
-create policy "Users manage their own places" on public.places
+create policy "Couple members manage their couple's places" on public.places
   for all
-  using (auth.uid()::text = user_id)
-  with check (auth.uid()::text = user_id);
+  using (
+    exists (
+      select 1 from public.users
+      where users.couple_id = places.couple_id
+        and users.id = auth.uid()::text
+    )
+  )
+  with check (
+    exists (
+      select 1 from public.users
+      where users.couple_id = places.couple_id
+        and users.id = auth.uid()::text
+    )
+  );
 
 create policy "Users manage their own visits" on public.visits
   for all
@@ -71,19 +83,21 @@ create policy "Users manage their own tags" on public.tags
   using (auth.uid()::text = user_id)
   with check (auth.uid()::text = user_id);
 
-create policy "Users manage their own place_tags" on public.place_tags
+create policy "Couple members manage their couple's place_tags" on public.place_tags
   for all
   using (
     exists (
       select 1 from public.places
+      join public.users on users.couple_id = places.couple_id
       where places.id = place_tags.place_id
-        and places.user_id = auth.uid()::text
+        and users.id = auth.uid()::text
     )
   )
   with check (
     exists (
       select 1 from public.places
+      join public.users on users.couple_id = places.couple_id
       where places.id = place_tags.place_id
-        and places.user_id = auth.uid()::text
+        and users.id = auth.uid()::text
     )
   );

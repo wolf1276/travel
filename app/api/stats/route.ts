@@ -8,10 +8,10 @@ export async function GET() {
 
   const [visitedPlaces, dreamPlacesRemaining, photosUploaded, tripsCompleted] = await Promise.all([
     prisma.place.findMany({
-      where: { userId: user.id, status: 'VISITED' },
+      where: { coupleId: user.coupleId, status: 'VISITED' },
       select: { country: true },
     }),
-    prisma.place.count({ where: { userId: user.id, status: 'WANT_TO_VISIT' } }),
+    prisma.place.count({ where: { coupleId: user.coupleId, status: 'WANT_TO_VISIT' } }),
     prisma.photo.count({ where: { userId: user.id } }),
     prisma.visit.count({ where: { userId: user.id } }),
   ]);

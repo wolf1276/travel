@@ -16,7 +16,7 @@ export async function GET(
 
   const { id } = await params;
   const place = await prisma.place.findFirst({
-    where: { id, userId: user.id },
+    where: { id, coupleId: user.coupleId },
     include: PLACE_INCLUDE,
   });
   if (!place) return NextResponse.json({ error: 'Not found' }, { status: 404 });
@@ -32,7 +32,7 @@ export async function PATCH(
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const { id } = await params;
-  const existing = await prisma.place.findFirst({ where: { id, userId: user.id } });
+  const existing = await prisma.place.findFirst({ where: { id, coupleId: user.coupleId } });
   if (!existing) return NextResponse.json({ error: 'Not found' }, { status: 404 });
 
   const json = await request.json();
@@ -64,7 +64,7 @@ export async function DELETE(
 
   const { id } = await params;
   const place = await prisma.place.findFirst({
-    where: { id, userId: user.id },
+    where: { id, coupleId: user.coupleId },
     include: { visits: { include: { photos: true } } },
   });
   if (!place) return NextResponse.json({ error: 'Not found' }, { status: 404 });

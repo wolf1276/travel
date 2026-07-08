@@ -13,7 +13,7 @@ export async function POST(
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const { id } = await params;
-  const place = await prisma.place.findFirst({ where: { id, userId: user.id } });
+  const place = await prisma.place.findFirst({ where: { id, coupleId: user.coupleId } });
   if (!place) return NextResponse.json({ error: 'Not found' }, { status: 404 });
 
   const json = await request.json();

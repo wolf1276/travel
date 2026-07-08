@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
   const limit = limitParam ? Number(limitParam) : undefined;
 
   const places = await prisma.place.findMany({
-    where: { userId: user.id, ...(status ? { status } : {}) },
+    where: { coupleId: user.coupleId, ...(status ? { status } : {}) },
     orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
     include: PLACE_INCLUDE,
     ...(limit ? { take: limit + 1 } : {}),
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
 
   const place = await prisma.$transaction(async (tx) => {
     const created = await tx.place.create({
-      data: { ...data, userId: user.id },
+      data: { ...data, coupleId: user.coupleId, createdById: user.id },
     });
     await syncPlaceTags(tx, user.id, created.id, tags);
     return tx.place.findUniqueOrThrow({ where: { id: created.id }, include: PLACE_INCLUDE });

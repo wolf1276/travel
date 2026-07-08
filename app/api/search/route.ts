@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
 
   const places = await prisma.place.findMany({
     where: {
-      userId: user.id,
+      coupleId: user.coupleId,
       ...(status ? { status } : {}),
       ...(tag ? { tags: { some: { tag: { name: tag } } } } : {}),
       ...(q

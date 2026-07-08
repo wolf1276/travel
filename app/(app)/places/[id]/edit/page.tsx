@@ -13,7 +13,7 @@ export default async function EditPlacePage({ params }: { params: Promise<{ id: 
   const { id } = await params;
 
   const place = await prisma.place.findFirst({
-    where: { id, userId: user.id },
+    where: { id, coupleId: user.coupleId },
     include: PLACE_INCLUDE,
   });
 

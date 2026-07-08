@@ -4,11 +4,15 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
-import { ImageOff, NotebookText } from 'lucide-react';
+import { ImageOff, NotebookText, UserRound } from 'lucide-react';
 import { TagBadge } from '@/components/common/TagBadge';
+import { useCouple } from '@/hooks/useCouple';
 import type { PlaceListItem } from '@/types/place';
 
 export function PlaceCard({ place }: { place: PlaceListItem }) {
+  const { data: couple } = useCouple();
+  const showAddedBy = (couple?.members.length ?? 0) > 1;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
@@ -43,6 +47,12 @@ export function PlaceCard({ place }: { place: PlaceListItem }) {
             </span>
           </div>
           <p className="text-sm text-muted-foreground">{place.country}</p>
+          {showAddedBy && (
+            <p className="flex items-center gap-1 text-xs text-muted-foreground">
+              <UserRound className="h-3 w-3" />
+              Added by {place.addedBy.displayName ?? place.addedBy.email}
+            </p>
+          )}
           {place.dreamNotes && (
             <p className="line-clamp-2 text-sm text-muted-foreground/90">
               <NotebookText className="mr-1 inline h-3.5 w-3.5 -translate-y-0.5" />

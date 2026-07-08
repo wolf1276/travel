@@ -19,6 +19,7 @@ export interface PlaceListItem {
   latitude: number | null;
   longitude: number | null;
   tags: Tag[];
+  addedBy: { displayName: string | null; email: string };
   visit: {
     id: string;
     visitDate: string;

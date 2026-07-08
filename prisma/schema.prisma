@@ -33,10 +33,10 @@ model User {
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
-  places Place[]
-  visits Visit[]
-  photos Photo[]
-  tags   Tag[]
+  createdPlaces Place[]
+  visits        Visit[]
+  photos        Photo[]
+  tags          Tag[]
 
   sentInvites     CoupleInvite[] @relation("InvitesSent")
   acceptedInvites CoupleInvite[] @relation("InvitesAccepted")
@@ -46,14 +46,15 @@ model User {
 
 /// Exactly two Users share one Couple. A solo Couple is created for every
 /// User on first sign-in (see lib/auth.ts); accepting a CoupleInvite moves
-/// the accepting User into the inviter's Couple. Shared resources (places,
-/// visits, photos) will attach to Couple starting in Phase 2.
+/// the accepting User into the inviter's Couple. Places are owned by Couple
+/// (see Place.coupleId); Visit/Photo/Tag still belong to the acting User.
 model Couple {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now()) @map("created_at")
 
   members User[]
   invites CoupleInvite[]
+  places  Place[]
 
   @@map("couples")
 }
@@ -79,13 +80,18 @@ model CoupleInvite {
   @@map("couple_invites")
 }
 
-/// A saved destination. Doubles as a "want to visit" wishlist item until it
-/// gains a Visit, at which point status flips to VISITED and the same
-/// record becomes the anchor for the memory scrapbook view.
+/// A saved destination shared by a Couple. Doubles as a "want to visit"
+/// wishlist item until it gains a Visit, at which point status flips to
+/// VISITED and the same record becomes the anchor for the memory scrapbook
+/// view. createdById is kept purely for attribution ("added by ...") -
+/// access is controlled by coupleId, so either partner can read/edit/delete
+/// any place regardless of who added it.
 model Place {
   id             String      @id @default(uuid())
-  userId         String      @map("user_id")
-  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  coupleId       String      @map("couple_id")
+  couple         Couple      @relation(fields: [coupleId], references: [id], onDelete: Cascade)
+  createdById    String      @map("created_by_id")
+  createdBy      User        @relation(fields: [createdById], references: [id], onDelete: Cascade)
   city           String
   country        String
   countryCode    String?     @map("country_code")
@@ -102,7 +108,7 @@ model Place {
   tags   PlaceTag[]
   visits Visit[]
 
-  @@index([userId, status])
+  @@index([coupleId, status])
   @@map("places")
 }
 

@@ -1,8 +1,9 @@
-import type { Photo, Place, PlaceTag, Tag, Visit } from '@prisma/client';
+import type { Photo, Place, PlaceTag, Tag, User, Visit } from '@prisma/client';
 import type { PlaceDetail, PlaceListItem } from '@/types/place';
 
 export type PlaceWithRelations = Place & {
   tags: (PlaceTag & { tag: Tag })[];
+  createdBy: Pick<User, 'displayName' | 'email'>;
   visits: (Visit & { photos: Photo[] })[];
 };
 
@@ -22,6 +23,7 @@ export function serializePlaceListItem(place: PlaceWithRelations): PlaceListItem
     latitude: place.latitude,
     longitude: place.longitude,
     tags: place.tags.map(({ tag }) => ({ id: tag.id, name: tag.name })),
+    addedBy: { displayName: place.createdBy.displayName, email: place.createdBy.email },
     visit: visit
       ? {
           id: visit.id,
