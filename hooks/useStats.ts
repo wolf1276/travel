@@ -1,0 +1,12 @@
+'use client';
+
+import { useQuery } from '@tanstack/react-query';
+import { statsApi } from '@/services/api/stats';
+import { queryKeys } from '@/lib/queryKeys';
+
+export function useStats() {
+  return useQuery({
+    queryKey: queryKeys.stats,
+    queryFn: statsApi.get,
+  });
+}

@@ -1,0 +1,126 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum PlaceStatus {
+  WANT_TO_VISIT
+  VISITED
+}
+
+/// Mirrors the Supabase `auth.users` row for the same id. Created on first
+/// sign-in (see lib/auth.ts). Kept separate from auth.users so app-specific
+/// profile fields can evolve without touching Supabase's managed table.
+model User {
+  id          String   @id
+  email       String   @unique
+  displayName String?  @map("display_name")
+  avatarUrl   String?  @map("avatar_url")
+  bio         String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  places Place[]
+  visits Visit[]
+  photos Photo[]
+  tags   Tag[]
+
+  @@map("users")
+}
+
+/// A saved destination. Doubles as a "want to visit" wishlist item until it
+/// gains a Visit, at which point status flips to VISITED and the same
+/// record becomes the anchor for the memory scrapbook view.
+model Place {
+  id             String      @id @default(uuid())
+  userId         String      @map("user_id")
+  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  city           String
+  country        String
+  countryCode    String?     @map("country_code")
+  latitude       Float?
+  longitude      Float?
+  coverImageUrl  String?     @map("cover_image_url")
+  coverImagePath String?     @map("cover_image_path")
+  dreamNotes     String?     @map("dream_notes")
+  personalReason String?     @map("personal_reason")
+  status         PlaceStatus @default(WANT_TO_VISIT)
+  createdAt      DateTime    @default(now()) @map("created_at")
+  updatedAt      DateTime    @updatedAt @map("updated_at")
+
+  tags   PlaceTag[]
+  visits Visit[]
+
+  @@index([userId, status])
+  @@map("places")
+}
+
+/// A completed visit to a Place. Modelled separately from Place (rather than
+/// flattening visit fields onto Place) so a future "Trips"/travel-recap
+/// feature can attach multiple visits to the same place without a migration.
+model Visit {
+  id        String   @id @default(uuid())
+  placeId   String   @map("place_id")
+  place     Place    @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  visitDate DateTime @map("visit_date")
+  rating    Int
+  journal   String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  photos Photo[]
+
+  @@index([placeId])
+  @@index([userId])
+  @@map("visits")
+}
+
+model Photo {
+  id          String   @id @default(uuid())
+  visitId     String   @map("visit_id")
+  visit       Visit    @relation(fields: [visitId], references: [id], onDelete: Cascade)
+  userId      String   @map("user_id")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  url         String
+  storagePath String   @map("storage_path")
+  width       Int?
+  height      Int?
+  isFavorite  Boolean  @default(false) @map("is_favorite")
+  caption     String?
+  position    Int      @default(0)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([visitId])
+  @@index([userId])
+  @@map("photos")
+}
+
+model Tag {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  places PlaceTag[]
+
+  @@unique([userId, name])
+  @@map("tags")
+}
+
+model PlaceTag {
+  placeId String @map("place_id")
+  place   Place  @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  tagId   String @map("tag_id")
+  tag     Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([placeId, tagId])
+  @@map("place_tags")
+}
