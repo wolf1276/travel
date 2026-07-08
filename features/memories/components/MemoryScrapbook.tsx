@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
 import { BookHeart, Camera, ImageOff, ImagePlus, Loader2, MapPin, NotebookPen, UserRound } from 'lucide-react';
 import { toast } from 'sonner';
@@ -17,6 +18,7 @@ import { useAddPhotos } from '@/hooks/useAddPhotos';
 import type { PlaceDetail } from '@/types/place';
 
 export function MemoryScrapbook({ place, userId }: { place: PlaceDetail; userId: string }) {
+  const router = useRouter();
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [isAddingPhotos, setIsAddingPhotos] = useState(false);
   const [pendingPhotos, setPendingPhotos] = useState<PendingPhoto[]>([]);
@@ -38,6 +40,7 @@ export function MemoryScrapbook({ place, userId }: { place: PlaceDetail; userId:
       setPendingPhotos([]);
       setPendingFavoriteIndex(null);
       setIsAddingPhotos(false);
+      router.refresh();
     } catch {
       toast.error('Could not add these photos.', {
         action: { label: 'Retry', onClick: () => void handleAddPhotos() },
