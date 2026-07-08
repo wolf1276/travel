@@ -1,10 +1,12 @@
 import type { Photo, Place, PlaceTag, Tag, User, Visit } from '@prisma/client';
 import type { PlaceDetail, PlaceListItem } from '@/types/place';
 
+type AttributionUser = Pick<User, 'displayName' | 'email'>;
+
 export type PlaceWithRelations = Place & {
   tags: (PlaceTag & { tag: Tag })[];
-  createdBy: Pick<User, 'displayName' | 'email'>;
-  visits: (Visit & { photos: Photo[] })[];
+  createdBy: AttributionUser;
+  visits: (Visit & { user: AttributionUser; photos: (Photo & { user: AttributionUser })[] })[];
 };
 
 export function serializePlaceListItem(place: PlaceWithRelations): PlaceListItem {
@@ -32,6 +34,7 @@ export function serializePlaceListItem(place: PlaceWithRelations): PlaceListItem
           journal: visit.journal,
           photoCount: visit.photos.length,
           favoritePhotoUrl: favoritePhoto?.url ?? null,
+          visitedBy: { displayName: visit.user.displayName, email: visit.user.email },
         }
       : null,
   };
@@ -56,6 +59,7 @@ export function serializePlaceDetail(place: PlaceWithRelations): PlaceDetail {
               height: photo.height,
               isFavorite: photo.isFavorite,
               caption: photo.caption,
+              uploadedBy: { displayName: photo.user.displayName, email: photo.user.email },
             })),
           }
         : null,

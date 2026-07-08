@@ -1,5 +1,5 @@
-import Image from 'next/image';
 import { ImageOff, MapPin, NotebookText, Sparkles } from 'lucide-react';
+import { ImageWithSkeleton } from '@/components/common/ImageWithSkeleton';
 import { TagBadge } from '@/components/common/TagBadge';
 import type { PlaceDetail } from '@/types/place';
 
@@ -8,7 +8,7 @@ export function PlaceDreamView({ place }: { place: PlaceDetail }) {
     <div className="space-y-6">
       <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl border border-border bg-muted">
         {place.coverImageUrl ? (
-          <Image
+          <ImageWithSkeleton
             src={place.coverImageUrl}
             alt={`${place.city}, ${place.country}`}
             fill

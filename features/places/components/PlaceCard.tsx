@@ -1,15 +1,16 @@
 'use client';
 
+import { memo } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import { ImageOff, NotebookText, UserRound } from 'lucide-react';
+import { ImageWithSkeleton } from '@/components/common/ImageWithSkeleton';
 import { TagBadge } from '@/components/common/TagBadge';
 import { useCouple } from '@/hooks/useCouple';
 import type { PlaceListItem } from '@/types/place';
 
-export function PlaceCard({ place }: { place: PlaceListItem }) {
+export const PlaceCard = memo(function PlaceCard({ place }: { place: PlaceListItem }) {
   const { data: couple } = useCouple();
   const showAddedBy = (couple?.members.length ?? 0) > 1;
 
@@ -26,7 +27,7 @@ export function PlaceCard({ place }: { place: PlaceListItem }) {
       >
         <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
           {place.coverImageUrl ? (
-            <Image
+            <ImageWithSkeleton
               src={place.coverImageUrl}
               alt={`${place.city}, ${place.country}`}
               fill
@@ -73,4 +74,4 @@ export function PlaceCard({ place }: { place: PlaceListItem }) {
       </Link>
     </motion.div>
   );
-}
+});

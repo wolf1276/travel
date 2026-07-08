@@ -35,7 +35,7 @@ export function MarkAsVisitedModal({
   const markAsVisited = useMarkAsVisited(placeId);
 
   const [visitDate, setVisitDate] = useState<Date | null>(new Date());
-  const [rating, setRating] = useState(5);
+  const [rating, setRating] = useState<number | null>(null);
   const [journal, setJournal] = useState('');
   const [photos, setPhotos] = useState<PendingPhoto[]>([]);
   const [favoriteIndex, setFavoriteIndex] = useState<number | null>(null);
@@ -58,7 +58,9 @@ export function MarkAsVisitedModal({
       onOpenChange(false);
       router.refresh();
     } catch {
-      toast.error('Could not save this memory. Please try again.');
+      toast.error('Could not save this memory.', {
+        action: { label: 'Retry', onClick: () => void handleSubmit() },
+      });
     }
   }
 
@@ -77,7 +79,7 @@ export function MarkAsVisitedModal({
               <DatePicker value={visitDate} onChange={setVisitDate} />
             </div>
             <div className="space-y-2">
-              <Label>Rating</Label>
+              <Label>Rating (optional)</Label>
               <div className="flex h-10 items-center">
                 <RatingStars value={rating} onChange={setRating} size="lg" readOnly={false} />
               </div>

@@ -1,5 +1,6 @@
 import { apiFetch } from '@/services/api/http';
 import type {
+  AddPhotosInput,
   CreatePlaceInput,
   MarkAsVisitedInput,
   PlaceDetail,
@@ -42,6 +43,12 @@ export const placesApi = {
   },
   markAsVisited(id: string, input: MarkAsVisitedInput) {
     return apiFetch<{ place: PlaceDetail }>(`/api/places/${id}/visit`, {
+      method: 'POST',
+      body: JSON.stringify(input),
+    }).then((r) => r.place);
+  },
+  addPhotos(id: string, input: AddPhotosInput) {
+    return apiFetch<{ place: PlaceDetail }>(`/api/places/${id}/photos`, {
       method: 'POST',
       body: JSON.stringify(input),
     }).then((r) => r.place);

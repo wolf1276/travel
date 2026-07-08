@@ -63,7 +63,9 @@ export function AddPlaceForm({ place, userId }: { place?: PlaceDetail; userId: s
       }
       router.refresh();
     } catch {
-      toast.error('Something went wrong. Please try again.');
+      toast.error('Something went wrong.', {
+        action: { label: 'Retry', onClick: () => void onSubmit(values) },
+      });
     }
   }
 
@@ -96,8 +98,9 @@ export function AddPlaceForm({ place, userId }: { place?: PlaceDetail; userId: s
         />
 
         <div className="space-y-2">
-          <Label>Search for a place</Label>
+          <Label htmlFor="location-search">Search for a place</Label>
           <LocationAutocomplete
+            id="location-search"
             defaultQuery={place ? `${place.city}, ${place.country}` : ''}
             onSelect={(result) => {
               form.setValue('city', result.city, { shouldValidate: true });

@@ -9,10 +9,12 @@ export function TagsInput({
   value,
   onChange,
   max = 10,
+  id,
 }: {
   value: string[];
   onChange: (tags: string[]) => void;
   max?: number;
+  id?: string;
 }) {
   const [draft, setDraft] = useState('');
   const { data: existingTags } = useTags();
@@ -61,6 +63,7 @@ export function TagsInput({
       )}
       <div className="relative">
         <Input
+          id={id}
           value={draft}
           onChange={(event) => setDraft(event.target.value)}
           onKeyDown={(event) => {

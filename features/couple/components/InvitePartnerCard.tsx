@@ -57,7 +57,9 @@ export function InvitePartnerCard({ currentUserId }: { currentUserId: string }) 
     try {
       await createInvite.mutateAsync();
     } catch {
-      toast.error('Could not create an invite link. Please try again.');
+      toast.error('Could not create an invite link.', {
+        action: { label: 'Retry', onClick: () => void handleInvite() },
+      });
     }
   }
 

@@ -17,7 +17,9 @@ export function InviteAcceptCard({ invite }: { invite: CoupleInvite }) {
       await acceptInvite.mutateAsync();
       toast.success(`You're now sharing travels with ${inviter.displayName ?? inviter.email}`);
     } catch {
-      toast.error('Could not accept this invite. Please try again.');
+      toast.error('Could not accept this invite.', {
+        action: { label: 'Retry', onClick: () => void handleAccept() },
+      });
     }
   }
 

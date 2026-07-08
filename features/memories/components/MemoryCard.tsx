@@ -1,15 +1,16 @@
 'use client';
 
+import { memo } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import { Camera, ImageOff, UserRound } from 'lucide-react';
+import { ImageWithSkeleton } from '@/components/common/ImageWithSkeleton';
 import { RatingStars } from '@/components/common/RatingStars';
 import { useCouple } from '@/hooks/useCouple';
 import type { PlaceListItem } from '@/types/place';
 
-export function MemoryCard({ place }: { place: PlaceListItem }) {
+export const MemoryCard = memo(function MemoryCard({ place }: { place: PlaceListItem }) {
   const visit = place.visit;
   const coverUrl = visit?.favoritePhotoUrl ?? place.coverImageUrl;
   const { data: couple } = useCouple();
@@ -28,7 +29,7 @@ export function MemoryCard({ place }: { place: PlaceListItem }) {
       >
         <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
           {coverUrl ? (
-            <Image
+            <ImageWithSkeleton
               src={coverUrl}
               alt={`${place.city}, ${place.country}`}
               fill
@@ -63,7 +64,9 @@ export function MemoryCard({ place }: { place: PlaceListItem }) {
               Added by {place.addedBy.displayName ?? place.addedBy.email}
             </p>
           )}
-          {visit && <RatingStars value={visit.rating} size="sm" />}
+          {visit?.rating !== undefined && visit?.rating !== null && (
+            <RatingStars value={visit.rating} size="sm" />
+          )}
           {visit?.journal && (
             <p className="line-clamp-2 text-sm text-muted-foreground/90">{visit.journal}</p>
           )}
@@ -71,4 +74,4 @@ export function MemoryCard({ place }: { place: PlaceListItem }) {
       </Link>
     </motion.div>
   );
-}
+});

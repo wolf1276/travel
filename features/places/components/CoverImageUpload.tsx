@@ -1,10 +1,10 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import Image from 'next/image';
 import { ImagePlus, Loader2, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
+import { ImageWithSkeleton } from '@/components/common/ImageWithSkeleton';
 import { cn } from '@/lib/utils';
 import { deleteImage, uploadImage } from '@/services/supabase/storage';
 
@@ -38,7 +38,9 @@ export function CoverImageUpload({
       onChange({ url: uploaded.url, path: uploaded.path });
       if (previous) void deleteImage(previous.path);
     } catch {
-      toast.error('Could not upload image. Please try again.');
+      toast.error('Could not upload image.', {
+        action: { label: 'Retry', onClick: () => void handleFile(file) },
+      });
     } finally {
       setIsUploading(false);
     }
@@ -81,7 +83,7 @@ export function CoverImageUpload({
 
       {value ? (
         <>
-          <Image src={value.url} alt="Cover" fill className="object-cover" />
+          <ImageWithSkeleton src={value.url} alt="Cover" fill className="object-cover" />
           <Button
             type="button"
             size="icon"

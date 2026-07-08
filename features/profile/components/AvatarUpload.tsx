@@ -1,9 +1,9 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import Image from 'next/image';
 import { Camera, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { ImageWithSkeleton } from '@/components/common/ImageWithSkeleton';
 import { uploadImage } from '@/services/supabase/storage';
 
 export function AvatarUpload({
@@ -30,7 +30,9 @@ export function AvatarUpload({
       const uploaded = await uploadImage(file, folder);
       onChange(uploaded.url);
     } catch {
-      toast.error('Could not upload photo. Please try again.');
+      toast.error('Could not upload photo.', {
+        action: { label: 'Retry', onClick: () => void handleFile(file) },
+      });
     } finally {
       setIsUploading(false);
     }
@@ -41,9 +43,10 @@ export function AvatarUpload({
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
+        aria-label="Change profile photo"
         className="group relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border border-border bg-muted text-lg font-medium text-muted-foreground"
       >
-        {value && <Image src={value} alt="Profile photo" fill className="object-cover" />}
+        {value && <ImageWithSkeleton src={value} alt="Profile photo" fill className="object-cover" />}
         {!value && fallback}
         <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
           {isUploading ? (

@@ -8,9 +8,11 @@ import { useLocationSearch, type LocationSuggestion } from '@/hooks/useLocationS
 export function LocationAutocomplete({
   defaultQuery,
   onSelect,
+  id,
 }: {
   defaultQuery?: string;
   onSelect: (suggestion: LocationSuggestion) => void;
+  id?: string;
 }) {
   const [query, setQuery] = useState(defaultQuery ?? '');
   const [isOpen, setIsOpen] = useState(false);
@@ -32,6 +34,7 @@ export function LocationAutocomplete({
       <div className="relative">
         <MapPin className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
+          id={id}
           value={query}
           onChange={(event) => {
             setQuery(event.target.value);
@@ -39,6 +42,10 @@ export function LocationAutocomplete({
           }}
           onFocus={() => setIsOpen(true)}
           placeholder="Search for a city..."
+          aria-label="Search for a place"
+          role="combobox"
+          aria-expanded={isOpen && hasToken && results.length > 0}
+          aria-autocomplete="list"
           className="pl-9"
         />
         {isLoading && (

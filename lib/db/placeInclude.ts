@@ -6,6 +6,12 @@ export const PLACE_INCLUDE = {
   visits: {
     orderBy: { visitDate: 'desc' },
     take: 1,
-    include: { photos: { orderBy: { position: 'asc' } } },
+    include: {
+      user: { select: { displayName: true, email: true } },
+      photos: {
+        orderBy: { position: 'asc' },
+        include: { user: { select: { displayName: true, email: true } } },
+      },
+    },
   },
 } satisfies Prisma.PlaceInclude;

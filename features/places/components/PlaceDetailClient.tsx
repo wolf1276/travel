@@ -28,7 +28,9 @@ export function PlaceDetailClient({ place, userId }: { place: PlaceDetail; userI
       router.push('/dashboard');
       router.refresh();
     } catch {
-      toast.error('Could not delete this place. Please try again.');
+      toast.error('Could not delete this place.', {
+        action: { label: 'Retry', onClick: () => void handleDelete() },
+      });
     }
   }
 
@@ -60,7 +62,11 @@ export function PlaceDetailClient({ place, userId }: { place: PlaceDetail; userI
         </div>
       </div>
 
-      {isVisited ? <MemoryScrapbook place={place} /> : <PlaceDreamView place={place} />}
+      {isVisited ? (
+        <MemoryScrapbook place={place} userId={userId} />
+      ) : (
+        <PlaceDreamView place={place} />
+      )}
 
       <ConfirmDialog
         open={confirmOpen}

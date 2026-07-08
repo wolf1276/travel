@@ -68,15 +68,45 @@ create policy "Couple members manage their couple's places" on public.places
     )
   );
 
-create policy "Users manage their own visits" on public.visits
+create policy "Couple members manage their couple's visits" on public.visits
   for all
-  using (auth.uid()::text = user_id)
-  with check (auth.uid()::text = user_id);
+  using (
+    exists (
+      select 1 from public.places
+      join public.users on users.couple_id = places.couple_id
+      where places.id = visits.place_id
+        and users.id = auth.uid()::text
+    )
+  )
+  with check (
+    exists (
+      select 1 from public.places
+      join public.users on users.couple_id = places.couple_id
+      where places.id = visits.place_id
+        and users.id = auth.uid()::text
+    )
+  );
 
-create policy "Users manage their own photos" on public.photos
+create policy "Couple members manage their couple's photos" on public.photos
   for all
-  using (auth.uid()::text = user_id)
-  with check (auth.uid()::text = user_id);
+  using (
+    exists (
+      select 1 from public.visits
+      join public.places on places.id = visits.place_id
+      join public.users on users.couple_id = places.couple_id
+      where visits.id = photos.visit_id
+        and users.id = auth.uid()::text
+    )
+  )
+  with check (
+    exists (
+      select 1 from public.visits
+      join public.places on places.id = visits.place_id
+      join public.users on users.couple_id = places.couple_id
+      where visits.id = photos.visit_id
+        and users.id = auth.uid()::text
+    )
+  );
 
 create policy "Users manage their own tags" on public.tags
   for all

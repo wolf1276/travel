@@ -18,22 +18,24 @@ export type PlaceFormInput = z.infer<typeof placeSchema>;
 export const updatePlaceSchema = placeSchema.partial();
 export type UpdatePlaceFormInput = z.infer<typeof updatePlaceSchema>;
 
+const photoInputSchema = z.object({
+  url: z.string().url(),
+  path: z.string().min(1),
+  width: z.number().int().positive().optional().nullable(),
+  height: z.number().int().positive().optional().nullable(),
+  caption: z.string().trim().max(300).optional().nullable(),
+});
+
 export const markAsVisitedSchema = z.object({
   visitDate: z.string().min(1, 'Visit date is required'),
-  rating: z.number().int().min(RATING_MIN).max(RATING_MAX),
+  rating: z.number().int().min(RATING_MIN).max(RATING_MAX).optional().nullable(),
   journal: z.string().trim().max(5000).optional().nullable(),
-  photos: z
-    .array(
-      z.object({
-        url: z.string().url(),
-        path: z.string().min(1),
-        width: z.number().int().positive().optional().nullable(),
-        height: z.number().int().positive().optional().nullable(),
-        caption: z.string().trim().max(300).optional().nullable(),
-      }),
-    )
-    .max(30)
-    .default([]),
+  photos: z.array(photoInputSchema).max(30).default([]),
   favoritePhotoIndex: z.number().int().min(0).optional().nullable(),
 });
 export type MarkAsVisitedFormInput = z.infer<typeof markAsVisitedSchema>;
+
+export const addPhotosSchema = z.object({
+  photos: z.array(photoInputSchema).min(1).max(30),
+});
+export type AddPhotosFormInput = z.infer<typeof addPhotosSchema>;

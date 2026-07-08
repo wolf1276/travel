@@ -7,6 +7,11 @@ export interface Tag {
   name: string;
 }
 
+export interface Attribution {
+  displayName: string | null;
+  email: string;
+}
+
 export interface PlaceListItem {
   id: string;
   city: string;
@@ -19,14 +24,15 @@ export interface PlaceListItem {
   latitude: number | null;
   longitude: number | null;
   tags: Tag[];
-  addedBy: { displayName: string | null; email: string };
+  addedBy: Attribution;
   visit: {
     id: string;
     visitDate: string;
-    rating: number;
+    rating: number | null;
     journal: string | null;
     photoCount: number;
     favoritePhotoUrl: string | null;
+    visitedBy: Attribution;
   } | null;
 }
 
@@ -42,6 +48,7 @@ export interface PlaceDetail extends PlaceListItem {
           height: number | null;
           isFavorite: boolean;
           caption: string | null;
+          uploadedBy: Attribution;
         }[];
       })
     | null;
@@ -62,16 +69,22 @@ export interface CreatePlaceInput {
 
 export type UpdatePlaceInput = Partial<CreatePlaceInput>;
 
+export interface PhotoInput {
+  url: string;
+  path: string;
+  width?: number | null;
+  height?: number | null;
+  caption?: string | null;
+}
+
 export interface MarkAsVisitedInput {
   visitDate: string;
-  rating: number;
+  rating?: number | null;
   journal?: string | null;
-  photos: {
-    url: string;
-    path: string;
-    width?: number | null;
-    height?: number | null;
-    caption?: string | null;
-  }[];
+  photos: PhotoInput[];
   favoritePhotoIndex?: number | null;
+}
+
+export interface AddPhotosInput {
+  photos: PhotoInput[];
 }

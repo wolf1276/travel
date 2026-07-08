@@ -1,9 +1,9 @@
 'use client';
 
 import { useCallback, useEffect } from 'react';
-import Image from 'next/image';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Star, X } from 'lucide-react';
+import { ImageWithSkeleton } from '@/components/common/ImageWithSkeleton';
 import type { GalleryPhoto } from '@/features/memories/components/MasonryGallery';
 
 export function PhotoLightbox({
@@ -11,11 +11,13 @@ export function PhotoLightbox({
   index,
   onIndexChange,
   onClose,
+  showAttribution = false,
 }: {
   photos: GalleryPhoto[];
   index: number | null;
   onIndexChange: (index: number) => void;
   onClose: () => void;
+  showAttribution?: boolean;
 }) {
   const isOpen = index !== null;
   const photo = index !== null ? photos[index] : null;
@@ -94,9 +96,9 @@ export function PhotoLightbox({
             className="relative max-h-[85vh] max-w-4xl"
             onClick={(event) => event.stopPropagation()}
           >
-            <Image
+            <ImageWithSkeleton
               src={photo.url}
-              alt={photo.caption ?? ''}
+              alt={photo.caption || 'Travel photo'}
               width={photo.width ?? 1200}
               height={photo.height ?? 900}
               className="max-h-[85vh] w-auto rounded-lg object-contain"
@@ -105,6 +107,11 @@ export function PhotoLightbox({
               <div className="absolute left-3 top-3 flex items-center gap-1 rounded-full bg-black/60 px-2.5 py-1 text-xs font-medium text-yellow-400">
                 <Star className="h-3.5 w-3.5 fill-current" />
                 Favorite
+              </div>
+            )}
+            {showAttribution && (
+              <div className="absolute bottom-3 left-3 rounded-full bg-black/60 px-2.5 py-1 text-xs text-white">
+                Uploaded by {photo.uploadedBy.displayName ?? photo.uploadedBy.email}
               </div>
             )}
           </motion.div>

@@ -11,7 +11,7 @@ export function RatingStars({
   size = 'md',
   readOnly = true,
 }: {
-  value: number;
+  value: number | null;
   onChange?: (value: number) => void;
   size?: keyof typeof SIZES;
   readOnly?: boolean;
@@ -25,7 +25,7 @@ export function RatingStars({
       aria-label="Rating"
     >
       {stars.map((star) => {
-        const filled = star <= value;
+        const filled = value !== null && star <= value;
         const icon = (
           <Star
             className={cn(

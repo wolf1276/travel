@@ -31,7 +31,9 @@ export function ProfileForm({ user }: { user: UserProfile }) {
       await updateProfile.mutateAsync(values);
       toast.success('Profile updated');
     } catch {
-      toast.error('Could not update your profile. Please try again.');
+      toast.error('Could not update your profile.', {
+        action: { label: 'Retry', onClick: () => void onSubmit(values) },
+      });
     }
   }
 

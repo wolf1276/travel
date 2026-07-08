@@ -1,19 +1,49 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import { format } from 'date-fns';
-import { BookHeart, Camera, MapPin, NotebookPen } from 'lucide-react';
+import { BookHeart, Camera, ImageOff, ImagePlus, Loader2, MapPin, NotebookPen, UserRound } from 'lucide-react';
+import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import { EmptyState } from '@/components/common/EmptyState';
+import { ImageWithSkeleton } from '@/components/common/ImageWithSkeleton';
 import { RatingStars } from '@/components/common/RatingStars';
 import { TagBadge } from '@/components/common/TagBadge';
 import { MasonryGallery } from '@/features/memories/components/MasonryGallery';
 import { PhotoLightbox } from '@/features/memories/components/PhotoLightbox';
+import { PhotoDropzone, type PendingPhoto } from '@/features/memories/components/PhotoDropzone';
+import { useCouple } from '@/hooks/useCouple';
+import { useAddPhotos } from '@/hooks/useAddPhotos';
 import type { PlaceDetail } from '@/types/place';
 
-export function MemoryScrapbook({ place }: { place: PlaceDetail }) {
+export function MemoryScrapbook({ place, userId }: { place: PlaceDetail; userId: string }) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [isAddingPhotos, setIsAddingPhotos] = useState(false);
+  const [pendingPhotos, setPendingPhotos] = useState<PendingPhoto[]>([]);
+  const [pendingFavoriteIndex, setPendingFavoriteIndex] = useState<number | null>(null);
+  const { data: couple } = useCouple();
+  const addPhotos = useAddPhotos(place.id);
+  const showAttribution = (couple?.members.length ?? 0) > 1;
+
   const visit = place.visit;
   if (!visit) return null;
+
+  async function handleAddPhotos() {
+    if (pendingPhotos.length === 0) return;
+    try {
+      await addPhotos.mutateAsync({
+        photos: pendingPhotos.map(({ url, path, width, height }) => ({ url, path, width, height })),
+      });
+      toast.success('Photos added');
+      setPendingPhotos([]);
+      setPendingFavoriteIndex(null);
+      setIsAddingPhotos(false);
+    } catch {
+      toast.error('Could not add these photos.', {
+        action: { label: 'Retry', onClick: () => void handleAddPhotos() },
+      });
+    }
+  }
 
   return (
     <div className="space-y-10">
@@ -25,7 +55,7 @@ export function MemoryScrapbook({ place }: { place: PlaceDetail }) {
         <div className="grid gap-6 md:grid-cols-[1fr_1.2fr]">
           {place.coverImageUrl && (
             <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-border">
-              <Image
+              <ImageWithSkeleton
                 src={place.coverImageUrl}
                 alt={`${place.city}, ${place.country}`}
                 fill
@@ -63,16 +93,29 @@ export function MemoryScrapbook({ place }: { place: PlaceDetail }) {
             <p className="text-xs text-muted-foreground">Visited</p>
             <p className="font-medium">{format(new Date(visit.visitDate), 'MMMM d, yyyy')}</p>
           </div>
-          <div className="h-8 w-px bg-border" />
-          <div>
-            <p className="text-xs text-muted-foreground">Rating</p>
-            <RatingStars value={visit.rating} />
-          </div>
+          {visit.rating !== null && (
+            <>
+              <div className="h-8 w-px bg-border" />
+              <div>
+                <p className="text-xs text-muted-foreground">Rating</p>
+                <RatingStars value={visit.rating} />
+              </div>
+            </>
+          )}
           <div className="h-8 w-px bg-border" />
           <div>
             <p className="text-xs text-muted-foreground">Photos</p>
             <p className="font-medium">{visit.photos.length}</p>
           </div>
+          {showAttribution && (
+            <>
+              <div className="h-8 w-px bg-border" />
+              <p className="flex items-center gap-1 text-xs text-muted-foreground">
+                <UserRound className="h-3 w-3" />
+                Visited by {visit.visitedBy.displayName ?? visit.visitedBy.email}
+              </p>
+            </>
+          )}
         </div>
 
         {visit.journal && (
@@ -88,9 +131,56 @@ export function MemoryScrapbook({ place }: { place: PlaceDetail }) {
         )}
 
         {visit.photos.length > 0 ? (
-          <MasonryGallery photos={visit.photos} onPhotoClick={setLightboxIndex} />
+          <MasonryGallery
+            photos={visit.photos}
+            onPhotoClick={setLightboxIndex}
+            showAttribution={showAttribution}
+          />
         ) : (
-          <p className="text-sm text-muted-foreground">No photos added for this memory yet.</p>
+          <EmptyState
+            icon={ImageOff}
+            title="No photos uploaded"
+            description="Add photos from your trip to bring this memory to life."
+            className="py-10"
+          />
+        )}
+
+        {isAddingPhotos ? (
+          <div className="space-y-3 rounded-2xl border border-border bg-card/40 p-4">
+            <PhotoDropzone
+              photos={pendingPhotos}
+              onChange={setPendingPhotos}
+              favoriteIndex={pendingFavoriteIndex}
+              onFavoriteChange={setPendingFavoriteIndex}
+              folder={`${userId}/visits/${place.id}`}
+            />
+            <div className="flex justify-end gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setIsAddingPhotos(false);
+                  setPendingPhotos([]);
+                  setPendingFavoriteIndex(null);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="button"
+                onClick={handleAddPhotos}
+                disabled={pendingPhotos.length === 0 || addPhotos.isPending}
+              >
+                {addPhotos.isPending && <Loader2 className="h-4 w-4 animate-spin" />}
+                Save photos
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <Button type="button" variant="outline" onClick={() => setIsAddingPhotos(true)}>
+            <ImagePlus className="h-4 w-4" />
+            Add photos
+          </Button>
         )}
       </section>
 
@@ -99,6 +189,7 @@ export function MemoryScrapbook({ place }: { place: PlaceDetail }) {
         index={lightboxIndex}
         onIndexChange={setLightboxIndex}
         onClose={() => setLightboxIndex(null)}
+        showAttribution={showAttribution}
       />
     </div>
   );

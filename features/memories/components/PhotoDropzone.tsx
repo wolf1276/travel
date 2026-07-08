@@ -53,7 +53,9 @@ export function PhotoDropzone({
       onChange(next);
       if (favoriteIndex === null && next.length > 0) onFavoriteChange(0);
     } catch {
-      toast.error('Some photos failed to upload. Please try again.');
+      toast.error('Some photos failed to upload.', {
+        action: { label: 'Retry', onClick: () => void handleFiles(files) },
+      });
     } finally {
       setIsUploading(false);
     }

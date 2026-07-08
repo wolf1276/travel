@@ -6,6 +6,7 @@ import Map, { Marker, NavigationControl, Popup } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { Map as MapIcon, MapPin } from 'lucide-react';
 import { EmptyState } from '@/components/common/EmptyState';
+import { Skeleton } from '@/components/ui/skeleton';
 import { usePlaces } from '@/hooks/usePlaces';
 import { cn } from '@/lib/utils';
 import type { PlaceListItem } from '@/types/place';
@@ -20,9 +21,10 @@ type MappablePlace = PlaceListItem & {
 
 export function WorldMap() {
   const router = useRouter();
-  const { data: wantToVisit } = usePlaces('WANT_TO_VISIT');
-  const { data: visited } = usePlaces('VISITED');
+  const { data: wantToVisit, isLoading: isLoadingDreams } = usePlaces('WANT_TO_VISIT');
+  const { data: visited, isLoading: isLoadingVisited } = usePlaces('VISITED');
   const [activeId, setActiveId] = useState<string | null>(null);
+  const isLoading = isLoadingDreams || isLoadingVisited;
 
   const points = useMemo<MappablePlace[]>(() => {
     const withCoords = (places: PlaceListItem[] | undefined, kind: MappablePlace['kind']) =>
@@ -46,6 +48,10 @@ export function WorldMap() {
   }
 
   const activePlace = points.find((place) => place.id === activeId) ?? null;
+
+  if (isLoading) {
+    return <Skeleton className="h-[calc(100vh-13rem)] min-h-[420px] w-full rounded-2xl" />;
+  }
 
   return (
     <div className="h-[calc(100vh-13rem)] min-h-[420px] w-full overflow-hidden rounded-2xl border border-border">
