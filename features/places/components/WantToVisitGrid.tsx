@@ -24,7 +24,7 @@ export function WantToVisitGrid() {
   if (!places || places.length === 0) {
     return (
       <EmptyState
-        icon={Compass}
+        icon={<Compass className="h-6 w-6" />}
         title="No dream places yet"
         description="Start your scrapbook by saving somewhere you'd love to visit one day."
         action={

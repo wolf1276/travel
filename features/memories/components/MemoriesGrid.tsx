@@ -32,7 +32,7 @@ export function MemoriesGrid() {
   if (places.length === 0) {
     return (
       <EmptyState
-        icon={Camera}
+        icon={<Camera className="h-6 w-6" />}
         title="No memories yet"
         description="Mark a dream place as visited to start filling your scrapbook."
         action={

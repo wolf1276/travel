@@ -24,7 +24,7 @@ export default async function InviteAcceptPage({
   if (!invite || invite.status !== 'PENDING' || invite.expiresAt < new Date()) {
     return (
       <EmptyState
-        icon={Users}
+        icon={<Users className="h-6 w-6" />}
         title="Invite no longer valid"
         description="This invite link has expired or was already used. Ask your partner to send a new one."
       />
@@ -34,7 +34,7 @@ export default async function InviteAcceptPage({
   if (invite.invitedById === user.id) {
     return (
       <EmptyState
-        icon={Users}
+        icon={<Users className="h-6 w-6" />}
         title="This is your own invite link"
         description="Share it with your partner so they can accept it from their own account."
       />
@@ -44,7 +44,7 @@ export default async function InviteAcceptPage({
   if (invite.couple.members.length >= 2) {
     return (
       <EmptyState
-        icon={Users}
+        icon={<Users className="h-6 w-6" />}
         title="This couple is already complete"
         description="This invite's couple already has a travel partner."
       />
@@ -59,7 +59,7 @@ export default async function InviteAcceptPage({
     if (ownCouple.members.length >= 2) {
       return (
         <EmptyState
-          icon={Users}
+          icon={<Users className="h-6 w-6" />}
           title="You already have a travel partner"
           description="Leave your current pairing before accepting a new invite."
         />

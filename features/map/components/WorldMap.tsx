@@ -42,7 +42,7 @@ export function WorldMap() {
   if (!MAPBOX_TOKEN) {
     return (
       <EmptyState
-        icon={MapIcon}
+        icon={<MapIcon className="h-6 w-6" />}
         title="Map not connected yet"
         description="Add NEXT_PUBLIC_MAPBOX_TOKEN to your environment to see your places on an interactive world map."
       />

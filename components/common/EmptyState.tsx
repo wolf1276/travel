@@ -1,17 +1,16 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import type { LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export function EmptyState({
-  icon: Icon,
+  icon,
   title,
   description,
   action,
   className,
 }: {
-  icon: LucideIcon;
+  icon: React.ReactNode;
   title: string;
   description: string;
   action?: React.ReactNode;
@@ -28,7 +27,7 @@ export function EmptyState({
       )}
     >
       <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
-        <Icon className="h-6 w-6" />
+        {icon}
       </div>
       <h3 className="font-serif text-xl font-semibold">{title}</h3>
       <p className="mt-1.5 max-w-sm text-sm text-muted-foreground">{description}</p>

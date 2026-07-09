@@ -28,7 +28,7 @@ export function Timeline() {
   if (visited.length === 0) {
     return (
       <EmptyState
-        icon={CalendarHeart}
+        icon={<CalendarHeart className="h-6 w-6" />}
         title="Your timeline is waiting"
         description="Once you mark places as visited, your journey will unfold here, year by year."
         className="py-12"

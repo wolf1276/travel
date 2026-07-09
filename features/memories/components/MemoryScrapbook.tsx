@@ -141,7 +141,7 @@ export function MemoryScrapbook({ place, userId }: { place: PlaceDetail; userId:
           />
         ) : (
           <EmptyState
-            icon={ImageOff}
+            icon={<ImageOff className="h-6 w-6" />}
             title="No photos uploaded"
             description="Add photos from your trip to bring this memory to life."
             className="py-10"
