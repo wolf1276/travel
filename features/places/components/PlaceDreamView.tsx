@@ -6,7 +6,7 @@ import type { PlaceDetail } from '@/types/place';
 export function PlaceDreamView({ place }: { place: PlaceDetail }) {
   return (
     <div className="space-y-6">
-      <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl border border-border bg-muted">
+      <div className="relative aspect-[16/9] w-full overflow-hidden rounded-3xl border border-border/70 bg-muted shadow-soft">
         {place.coverImageUrl ? (
           <ImageWithSkeleton
             src={place.coverImageUrl}
@@ -36,7 +36,7 @@ export function PlaceDreamView({ place }: { place: PlaceDetail }) {
       )}
 
       {place.dreamNotes && (
-        <div className="space-y-2 rounded-2xl border border-border bg-card/40 p-5">
+        <div className="space-y-2 rounded-2xl border border-border/70 bg-card/60 p-5 shadow-soft">
           <div className="flex items-center gap-2 text-sm font-medium">
             <NotebookText className="h-4 w-4" />
             Dream notes
@@ -48,7 +48,7 @@ export function PlaceDreamView({ place }: { place: PlaceDetail }) {
       )}
 
       {place.personalReason && (
-        <div className="space-y-2 rounded-2xl border border-border bg-card/40 p-5">
+        <div className="space-y-2 rounded-2xl border border-border/70 bg-card/60 p-5 shadow-soft">
           <div className="flex items-center gap-2 text-sm font-medium">
             <Sparkles className="h-4 w-4" />
             Why this place

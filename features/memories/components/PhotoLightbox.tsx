@@ -101,10 +101,10 @@ export function PhotoLightbox({
               alt={photo.caption || 'Travel photo'}
               width={photo.width ?? 1200}
               height={photo.height ?? 900}
-              className="max-h-[85vh] w-auto rounded-lg object-contain"
+              className="max-h-[85vh] w-auto rounded-2xl object-contain"
             />
             {photo.isFavorite && (
-              <div className="absolute left-3 top-3 flex items-center gap-1 rounded-full bg-black/60 px-2.5 py-1 text-xs font-medium text-yellow-400">
+              <div className="absolute left-3 top-3 flex items-center gap-1 rounded-full bg-black/60 px-2.5 py-1 text-xs font-medium text-amber-300">
                 <Star className="h-3.5 w-3.5 fill-current" />
                 Favorite
               </div>

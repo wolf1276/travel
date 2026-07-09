@@ -28,7 +28,7 @@ export function SearchResults({
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {Array.from({ length: 4 }).map((_, index) => (
           <PlaceCardSkeleton key={index} />
         ))}
@@ -43,7 +43,7 @@ export function SearchResults({
   }
 
   return (
-    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {places.map((place) =>
         place.status === 'VISITED' ? (
           <MemoryCard key={place.id} place={place} />

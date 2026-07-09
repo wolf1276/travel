@@ -29,7 +29,7 @@ export const MasonryGallery = memo(function MasonryGallery({
           key={photo.id}
           type="button"
           onClick={() => onPhotoClick(index)}
-          className="masonry-item group relative block w-full overflow-hidden rounded-xl border border-border"
+          className="masonry-item group relative block w-full overflow-hidden rounded-2xl border border-border/70 shadow-soft transition-shadow hover:shadow-elevated"
         >
           <ImageWithSkeleton
             src={photo.url}
@@ -40,7 +40,7 @@ export const MasonryGallery = memo(function MasonryGallery({
             sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
           />
           {photo.isFavorite && (
-            <div className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/50 text-yellow-400">
+            <div className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/50 text-amber-300">
               <Star className="h-3.5 w-3.5 fill-current" />
             </div>
           )}

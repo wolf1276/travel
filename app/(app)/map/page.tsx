@@ -7,8 +7,8 @@ export default function MapPage() {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="text-2xl font-semibold">Map</h1>
-        <p className="text-sm text-muted-foreground">Blue for dreams, green for memories.</p>
+        <h1 className="font-serif text-3xl font-semibold text-foreground">🗺 Our world</h1>
+        <p className="text-sm text-muted-foreground">Coral pins are dreams, sage pins are memories.</p>
       </div>
       <WorldMap />
     </div>

@@ -13,7 +13,7 @@ export function TopNav({
   avatarUrl: string | null;
 }) {
   return (
-    <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-border bg-background/80 px-4 backdrop-blur-lg sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-border/70 bg-background/85 px-4 backdrop-blur-lg sm:px-6 lg:px-8">
       <div className="lg:hidden">
         <Logo iconOnly />
       </div>

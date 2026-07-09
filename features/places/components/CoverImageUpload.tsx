@@ -65,7 +65,7 @@ export function CoverImageUpload({
         if (file) void handleFile(file);
       }}
       className={cn(
-        'relative flex aspect-[16/9] w-full items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-border bg-card/40 transition-colors',
+        'relative flex aspect-[16/9] w-full items-center justify-center overflow-hidden rounded-3xl border-2 border-dashed border-border/80 bg-card/40 transition-colors',
         isDragging && 'border-primary bg-primary/5',
       )}
     >

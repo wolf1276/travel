@@ -25,7 +25,7 @@ export const MemoryCard = memo(function MemoryCard({ place }: { place: PlaceList
     >
       <Link
         href={`/places/${place.id}`}
-        className="group block overflow-hidden rounded-2xl border border-border bg-card shadow-soft transition-shadow hover:shadow-elevated"
+        className="group block overflow-hidden rounded-3xl border border-border/70 bg-card shadow-soft transition-shadow hover:shadow-elevated"
       >
         <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
           {coverUrl ? (
@@ -41,16 +41,19 @@ export const MemoryCard = memo(function MemoryCard({ place }: { place: PlaceList
               <ImageOff className="h-8 w-8" />
             </div>
           )}
+          <span className="absolute left-3 top-3 rounded-full bg-background/90 px-2.5 py-1 text-[11px] font-medium text-success shadow-soft backdrop-blur-sm">
+            ❤️ Memory
+          </span>
           {visit && (
-            <div className="absolute bottom-2 left-2 flex items-center gap-1 rounded-full bg-black/60 px-2 py-1 text-xs text-white">
+            <div className="absolute bottom-2 right-2 flex items-center gap-1 rounded-full bg-black/60 px-2 py-1 text-xs text-white">
               <Camera className="h-3 w-3" />
               {visit.photoCount}
             </div>
           )}
         </div>
-        <div className="space-y-2 p-4">
+        <div className="space-y-2 p-5">
           <div className="flex items-baseline justify-between gap-2">
-            <h3 className="truncate font-semibold">{place.city}</h3>
+            <h3 className="truncate font-serif text-lg font-semibold text-foreground">{place.city}</h3>
             {visit && (
               <span className="shrink-0 text-xs text-muted-foreground">
                 {format(new Date(visit.visitDate), 'MMM d, yyyy')}

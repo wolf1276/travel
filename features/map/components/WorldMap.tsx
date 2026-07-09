@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTheme } from 'next-themes';
 import Map, { Marker, NavigationControl, Popup } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { Map as MapIcon, MapPin } from 'lucide-react';
@@ -21,6 +22,7 @@ type MappablePlace = PlaceListItem & {
 
 export function WorldMap() {
   const router = useRouter();
+  const { resolvedTheme } = useTheme();
   const { data: wantToVisit, isLoading: isLoadingDreams } = usePlaces('WANT_TO_VISIT');
   const { data: visited, isLoading: isLoadingVisited } = usePlaces('VISITED');
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -54,11 +56,13 @@ export function WorldMap() {
   }
 
   return (
-    <div className="h-[calc(100vh-13rem)] min-h-[420px] w-full overflow-hidden rounded-2xl border border-border">
+    <div className="h-[calc(100vh-13rem)] min-h-[420px] w-full overflow-hidden rounded-3xl border border-border/70 shadow-soft">
       <Map
         mapboxAccessToken={MAPBOX_TOKEN}
         initialViewState={{ longitude: 10, latitude: 20, zoom: 1.4 }}
-        mapStyle="mapbox://styles/mapbox/dark-v11"
+        mapStyle={
+          resolvedTheme === 'dark' ? 'mapbox://styles/mapbox/dark-v11' : 'mapbox://styles/mapbox/light-v11'
+        }
         style={{ width: '100%', height: '100%' }}
         onClick={() => setActiveId(null)}
       >
@@ -78,7 +82,7 @@ export function WorldMap() {
             <MapPin
               className={cn(
                 'h-7 w-7 cursor-pointer drop-shadow-md transition-transform hover:scale-110',
-                place.kind === 'memory' ? 'fill-emerald-500 text-emerald-600' : 'fill-primary text-primary',
+                place.kind === 'memory' ? 'fill-success text-success' : 'fill-primary text-primary',
               )}
             />
           </Marker>

@@ -78,7 +78,7 @@ export function TagsInput({
           disabled={value.length >= max}
         />
         {suggestions.length > 0 && (
-          <div className="absolute z-30 mt-1 w-full overflow-hidden rounded-xl border border-border bg-popover shadow-elevated">
+          <div className="absolute z-30 mt-1 w-full overflow-hidden rounded-xl border border-border/70 bg-popover shadow-elevated">
             {suggestions.map((name) => (
               <button
                 key={name}

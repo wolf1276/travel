@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Compass } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export function Logo({
@@ -14,16 +14,18 @@ export function Logo({
   return (
     <Link
       href={href}
-      className={cn('flex items-center gap-2 font-semibold tracking-tight', className)}
+      className={cn('flex items-center gap-2.5 tracking-tight', className)}
       aria-label={iconOnly ? 'Travel Memories' : undefined}
     >
       <span
         aria-hidden="true"
-        className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary text-primary-foreground"
+        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-soft"
       >
-        <Compass className="h-5 w-5" strokeWidth={2.25} />
+        <Heart className="h-4 w-4" strokeWidth={2.25} fill="currentColor" />
       </span>
-      {!iconOnly && <span className="text-lg">Travel Memories</span>}
+      {!iconOnly && (
+        <span className="font-serif text-lg font-semibold text-foreground">Travel Memories</span>
+      )}
     </Link>
   );
 }

@@ -51,13 +51,13 @@ export function MemoryScrapbook({ place, userId }: { place: PlaceDetail; userId:
   return (
     <div className="space-y-10">
       <section className="space-y-4">
-        <header className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-          <BookHeart className="h-4 w-4" />
-          Dream
+        <header className="flex items-center gap-2 font-serif text-lg font-semibold text-foreground">
+          <BookHeart className="h-4 w-4 text-primary" />
+          The dream
         </header>
         <div className="grid gap-6 md:grid-cols-[1fr_1.2fr]">
           {place.coverImageUrl && (
-            <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-border">
+            <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-border/70 shadow-soft">
               <ImageWithSkeleton
                 src={place.coverImageUrl}
                 alt={`${place.city}, ${place.country}`}
@@ -86,12 +86,12 @@ export function MemoryScrapbook({ place, userId }: { place: PlaceDetail; userId:
       </section>
 
       <section className="space-y-4">
-        <header className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-          <Camera className="h-4 w-4" />
-          Reality
+        <header className="flex items-center gap-2 font-serif text-lg font-semibold text-foreground">
+          <Camera className="h-4 w-4 text-primary" />
+          The memory
         </header>
 
-        <div className="flex flex-wrap items-center gap-4 rounded-2xl border border-border bg-card/40 p-4">
+        <div className="flex flex-wrap items-center gap-4 rounded-2xl border border-border/70 bg-card/60 p-4 shadow-soft">
           <div>
             <p className="text-xs text-muted-foreground">Visited</p>
             <p className="font-medium">{format(new Date(visit.visitDate), 'MMMM d, yyyy')}</p>
@@ -122,12 +122,12 @@ export function MemoryScrapbook({ place, userId }: { place: PlaceDetail; userId:
         </div>
 
         {visit.journal && (
-          <div className="space-y-2 rounded-2xl border border-border bg-card/40 p-5">
-            <div className="flex items-center gap-2 text-sm font-medium">
-              <NotebookPen className="h-4 w-4" />
+          <div className="space-y-2 rounded-2xl border border-border/70 bg-card/60 p-5 shadow-soft">
+            <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+              <NotebookPen className="h-4 w-4 text-primary" />
               Journal
             </div>
-            <p className="whitespace-pre-line text-sm leading-relaxed text-foreground/90">
+            <p className="whitespace-pre-line font-serif text-base leading-relaxed text-foreground/90">
               {visit.journal}
             </p>
           </div>
@@ -149,7 +149,7 @@ export function MemoryScrapbook({ place, userId }: { place: PlaceDetail; userId:
         )}
 
         {isAddingPhotos ? (
-          <div className="space-y-3 rounded-2xl border border-border bg-card/40 p-4">
+          <div className="space-y-3 rounded-2xl border border-border/70 bg-card/60 p-4 shadow-soft">
             <PhotoDropzone
               photos={pendingPhotos}
               onChange={setPendingPhotos}

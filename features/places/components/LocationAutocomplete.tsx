@@ -54,7 +54,7 @@ export function LocationAutocomplete({
       </div>
 
       {isOpen && hasToken && results.length > 0 && (
-        <div className="absolute z-30 mt-2 w-full overflow-hidden rounded-xl border border-border bg-popover shadow-elevated">
+        <div className="absolute z-30 mt-2 w-full overflow-hidden rounded-xl border border-border/70 bg-popover shadow-elevated">
           {results.map((result) => (
             <button
               key={result.id}

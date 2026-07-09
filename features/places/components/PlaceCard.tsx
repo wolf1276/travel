@@ -23,7 +23,7 @@ export const PlaceCard = memo(function PlaceCard({ place }: { place: PlaceListIt
     >
       <Link
         href={`/places/${place.id}`}
-        className="group block overflow-hidden rounded-2xl border border-border bg-card shadow-soft transition-shadow hover:shadow-elevated"
+        className="group block overflow-hidden rounded-3xl border border-border/70 bg-card shadow-soft transition-shadow hover:shadow-elevated"
       >
         <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
           {place.coverImageUrl ? (
@@ -39,10 +39,13 @@ export const PlaceCard = memo(function PlaceCard({ place }: { place: PlaceListIt
               <ImageOff className="h-8 w-8" />
             </div>
           )}
+          <span className="absolute left-3 top-3 rounded-full bg-background/90 px-2.5 py-1 text-[11px] font-medium text-primary shadow-soft backdrop-blur-sm">
+            ✨ Dream
+          </span>
         </div>
-        <div className="space-y-2 p-4">
+        <div className="space-y-2 p-5">
           <div className="flex items-baseline justify-between gap-2">
-            <h3 className="truncate font-semibold">{place.city}</h3>
+            <h3 className="truncate font-serif text-lg font-semibold text-foreground">{place.city}</h3>
             <span className="shrink-0 text-xs text-muted-foreground">
               {format(new Date(place.createdAt), 'MMM d, yyyy')}
             </span>

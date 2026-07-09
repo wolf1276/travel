@@ -44,7 +44,7 @@ export function AvatarUpload({
         type="button"
         onClick={() => inputRef.current?.click()}
         aria-label="Change profile photo"
-        className="group relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border border-border bg-muted text-lg font-medium text-muted-foreground"
+        className="group relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border-2 border-card bg-muted font-serif text-lg font-medium text-muted-foreground shadow-soft"
       >
         {value && <ImageWithSkeleton src={value} alt="Profile photo" fill className="object-cover" />}
         {!value && fallback}

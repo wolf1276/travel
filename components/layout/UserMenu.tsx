@@ -52,7 +52,7 @@ export function UserMenu({
         aria-label="Account menu"
         className="rounded-full outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       >
-        <Avatar className="h-9 w-9 border border-border">
+        <Avatar className="h-9 w-9 border-2 border-card shadow-soft">
           {avatarUrl && <AvatarImage src={avatarUrl} alt={displayName ?? email} />}
           <AvatarFallback>{initialsFor(displayName, email)}</AvatarFallback>
         </Avatar>

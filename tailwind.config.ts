@@ -93,6 +93,7 @@ const config: Config = {
       },
       fontFamily: {
         sans: ['var(--font-sans)', 'ui-sans-serif', 'system-ui'],
+        serif: ['var(--font-serif)', 'Georgia', 'serif'],
       },
     },
   },

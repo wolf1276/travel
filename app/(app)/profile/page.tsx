@@ -14,7 +14,7 @@ export default async function ProfilePage() {
     <div className="mx-auto max-w-2xl space-y-10">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">Profile</h1>
+          <h1 className="font-serif text-3xl font-semibold text-foreground">Your profile</h1>
           <p className="text-sm text-muted-foreground">Your account and travel stats.</p>
         </div>
         <SignOutButton />

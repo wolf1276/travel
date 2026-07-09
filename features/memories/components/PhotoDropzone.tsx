@@ -86,7 +86,7 @@ export function PhotoDropzone({
           if (event.dataTransfer.files.length) void handleFiles(event.dataTransfer.files);
         }}
         className={cn(
-          'flex flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-border bg-card/40 px-6 py-8 text-center text-sm text-muted-foreground transition-colors',
+          'flex flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-border/80 bg-card/40 px-6 py-8 text-center text-sm text-muted-foreground transition-colors',
           isDragging && 'border-primary bg-primary/5',
         )}
       >
@@ -117,7 +117,7 @@ export function PhotoDropzone({
           {photos.map((photo, index) => (
             <div
               key={photo.id}
-              className="group relative aspect-square overflow-hidden rounded-xl border border-border"
+              className="group relative aspect-square overflow-hidden rounded-2xl border border-border/70"
             >
               <Image src={photo.url} alt="" fill className="object-cover" />
               <div className="absolute inset-0 flex items-start justify-between bg-gradient-to-b from-black/40 via-transparent to-transparent p-1.5 opacity-0 transition-opacity group-hover:opacity-100">
@@ -125,7 +125,7 @@ export function PhotoDropzone({
                   type="button"
                   onClick={() => onFavoriteChange(index)}
                   aria-label="Set as favorite photo"
-                  className={cn('rounded-full bg-black/50 p-1', favoriteIndex === index && 'text-yellow-400')}
+                  className={cn('rounded-full bg-black/50 p-1', favoriteIndex === index && 'text-amber-300')}
                 >
                   <Star className={cn('h-3.5 w-3.5', favoriteIndex === index && 'fill-current')} />
                 </button>

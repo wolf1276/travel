@@ -24,8 +24,8 @@ export default function SearchPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Search</h1>
-        <p className="text-sm text-muted-foreground">Find any place in your scrapbook.</p>
+        <h1 className="font-serif text-3xl font-semibold text-foreground">🔍 Search our scrapbook</h1>
+        <p className="text-sm text-muted-foreground">Find any place, dream or memory.</p>
       </div>
       <SearchBar
         query={query}
