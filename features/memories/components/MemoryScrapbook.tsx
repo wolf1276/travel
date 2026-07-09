@@ -60,17 +60,19 @@ export function MemoryScrapbook({ place, userId }: { place: PlaceDetail; userId:
             <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-border/70 shadow-soft">
               <ImageWithSkeleton
                 src={place.coverImageUrl}
-                alt={`${place.city}, ${place.country}`}
+                alt={place.name}
                 fill
                 className="object-cover"
               />
             </div>
           )}
           <div className="space-y-3">
-            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-              <MapPin className="h-4 w-4" />
-              {place.city}, {place.country}
-            </div>
+            {place.address && (
+              <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                <MapPin className="h-4 w-4" />
+                {place.address}
+              </div>
+            )}
             {place.dreamNotes && (
               <p className="text-sm leading-relaxed text-foreground/90">{place.dreamNotes}</p>
             )}

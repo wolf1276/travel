@@ -68,7 +68,7 @@ export function Timeline() {
                     {(place.visit?.favoritePhotoUrl ?? place.coverImageUrl) && (
                       <ImageWithSkeleton
                         src={place.visit!.favoritePhotoUrl ?? place.coverImageUrl!}
-                        alt={`${place.city}, ${place.country}`}
+                        alt={place.name}
                         fill
                         sizes="64px"
                         className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -77,9 +77,7 @@ export function Timeline() {
                   </div>
                   <div className="min-w-0 flex-1 space-y-1">
                     <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
-                      <p className="truncate font-semibold text-foreground">
-                        {place.city}, {place.country}
-                      </p>
+                      <p className="truncate font-semibold text-foreground">{place.name}</p>
                       <span className="shrink-0 text-xs text-muted-foreground">
                         {format(new Date(place.visit!.visitDate), 'MMMM d')}
                       </span>

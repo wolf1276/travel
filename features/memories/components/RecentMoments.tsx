@@ -36,13 +36,13 @@ export function RecentMoments() {
         >
           <ImageWithSkeleton
             src={place.visit!.favoritePhotoUrl ?? place.coverImageUrl!}
-            alt={`${place.city}, ${place.country}`}
+            alt={place.name}
             fill
             sizes="176px"
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
           <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent px-3 pb-2.5 pt-8 text-left">
-            <p className="truncate text-sm font-medium text-white">{place.city}</p>
+            <p className="truncate text-sm font-medium text-white">{place.name}</p>
             <p className="text-[11px] text-white/75">{format(new Date(place.visit!.visitDate), 'MMM yyyy')}</p>
           </div>
         </Link>

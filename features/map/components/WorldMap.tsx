@@ -102,8 +102,10 @@ export function WorldMap() {
               onClick={() => router.push(`/places/${activePlace.id}`)}
               className="flex flex-col gap-0.5 px-3 py-2 text-left"
             >
-              <span className="text-sm font-medium">{activePlace.city}</span>
-              <span className="text-xs text-muted-foreground">{activePlace.country}</span>
+              <span className="text-sm font-medium">{activePlace.name}</span>
+              {activePlace.address && (
+                <span className="text-xs text-muted-foreground">{activePlace.address}</span>
+              )}
             </button>
           </Popup>
         )}

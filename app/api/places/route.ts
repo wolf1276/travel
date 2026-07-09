@@ -3,6 +3,7 @@ import { getServerUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { PLACE_INCLUDE } from '@/lib/db/placeInclude';
 import { syncPlaceTags } from '@/lib/db/syncPlaceTags';
+import { notifyPartnersOfNewPlace } from '@/lib/db/notifyPartnersOfNewPlace';
 import { serializePlaceListItem } from '@/lib/serializers/place';
 import { placeSchema } from '@/lib/validations/place.schema';
 
@@ -52,6 +53,7 @@ export async function POST(request: NextRequest) {
       data: { ...data, coupleId: user.coupleId, createdById: user.id },
     });
     await syncPlaceTags(tx, user.id, created.id, tags);
+    await notifyPartnersOfNewPlace(tx, user, created.id);
     return tx.place.findUniqueOrThrow({ where: { id: created.id }, include: PLACE_INCLUDE });
   });
 

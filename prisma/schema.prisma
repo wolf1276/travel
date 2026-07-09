@@ -19,6 +19,10 @@ enum CoupleInviteStatus {
   REVOKED
 }
 
+enum NotificationType {
+  PLACE_ADDED
+}
+
 /// Mirrors the Supabase `auth.users` row for the same id. Created on first
 /// sign-in (see lib/auth.ts). Kept separate from auth.users so app-specific
 /// profile fields can evolve without touching Supabase's managed table.
@@ -40,6 +44,9 @@ model User {
 
   sentInvites     CoupleInvite[] @relation("InvitesSent")
   acceptedInvites CoupleInvite[] @relation("InvitesAccepted")
+
+  notifications          Notification[] @relation("NotificationRecipient")
+  triggeredNotifications Notification[] @relation("NotificationActor")
 
   @@map("users")
 }
@@ -80,33 +87,39 @@ model CoupleInvite {
   @@map("couple_invites")
 }
 
-/// A saved destination shared by a Couple. Doubles as a "want to visit"
-/// wishlist item until it gains a Visit, at which point status flips to
-/// VISITED and the same record becomes the anchor for the memory scrapbook
-/// view. createdById is kept purely for attribution ("added by ...") -
-/// access is controlled by coupleId, so either partner can read/edit/delete
-/// any place regardless of who added it.
+/// A saved place shared by a Couple - any location worth visiting together
+/// (cafe, restaurant, beach, viewpoint, museum, hidden spot, ...), not just
+/// travel destinations. Doubles as a "want to visit" wishlist item until it
+/// gains a Visit, at which point status flips to VISITED and the same
+/// record becomes the anchor for the memory scrapbook view. createdById is
+/// kept purely for attribution ("added by ...") - access is controlled by
+/// coupleId, so either partner can read/edit/delete any place regardless of
+/// who added it. country/countryCode are best-effort, auto-filled from the
+/// location provider when available - never required.
 model Place {
-  id             String      @id @default(uuid())
-  coupleId       String      @map("couple_id")
-  couple         Couple      @relation(fields: [coupleId], references: [id], onDelete: Cascade)
-  createdById    String      @map("created_by_id")
-  createdBy      User        @relation(fields: [createdById], references: [id], onDelete: Cascade)
-  city           String
-  country        String
-  countryCode    String?     @map("country_code")
-  latitude       Float?
-  longitude      Float?
-  coverImageUrl  String?     @map("cover_image_url")
-  coverImagePath String?     @map("cover_image_path")
-  dreamNotes     String?     @map("dream_notes")
-  personalReason String?     @map("personal_reason")
-  status         PlaceStatus @default(WANT_TO_VISIT)
-  createdAt      DateTime    @default(now()) @map("created_at")
-  updatedAt      DateTime    @updatedAt @map("updated_at")
+  id              String      @id @default(uuid())
+  coupleId        String      @map("couple_id")
+  couple          Couple      @relation(fields: [coupleId], references: [id], onDelete: Cascade)
+  createdById     String      @map("created_by_id")
+  createdBy       User        @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  name            String
+  address         String?
+  country         String?
+  countryCode     String?     @map("country_code")
+  placeProviderId String?     @map("place_provider_id")
+  latitude        Float?
+  longitude       Float?
+  coverImageUrl   String?     @map("cover_image_url")
+  coverImagePath  String?     @map("cover_image_path")
+  dreamNotes      String?     @map("dream_notes")
+  personalReason  String?     @map("personal_reason")
+  status          PlaceStatus @default(WANT_TO_VISIT)
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
 
-  tags   PlaceTag[]
-  visits Visit[]
+  tags          PlaceTag[]
+  visits        Visit[]
+  notifications Notification[]
 
   @@index([coupleId, status])
   @@map("places")
@@ -175,4 +188,25 @@ model PlaceTag {
 
   @@id([placeId, tagId])
   @@map("place_tags")
+}
+
+/// An in-app notification for one User, e.g. "<partner> added a new place."
+/// Currently only fired when a partner adds a Place (see POST
+/// /api/places) - actorId is who triggered it, userId is the recipient.
+/// placeId lets the notification deep-link straight to the place.
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String           @map("user_id")
+  user      User             @relation("NotificationRecipient", fields: [userId], references: [id], onDelete: Cascade)
+  actorId   String?          @map("actor_id")
+  actor     User?            @relation("NotificationActor", fields: [actorId], references: [id], onDelete: Cascade)
+  type      NotificationType @default(PLACE_ADDED)
+  placeId   String?          @map("place_id")
+  place     Place?           @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  message   String
+  isRead    Boolean          @default(false) @map("is_read")
+  createdAt DateTime         @default(now()) @map("created_at")
+
+  @@index([userId, isRead])
+  @@map("notifications")
 }

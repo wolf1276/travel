@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -31,13 +32,16 @@ export function AddPlaceForm({ place, userId }: { place?: PlaceDetail; userId: s
   const isEditing = Boolean(place);
   const createPlace = useCreatePlace();
   const updatePlace = useUpdatePlace(place?.id ?? '');
+  const [manualEntry, setManualEntry] = useState(false);
 
   const form = useForm<PlaceFormInput>({
     resolver: zodResolver(placeSchema),
     defaultValues: {
-      city: place?.city ?? '',
-      country: place?.country ?? '',
+      name: place?.name ?? '',
+      address: place?.address ?? null,
+      country: place?.country ?? null,
       countryCode: place?.countryCode ?? null,
+      placeProviderId: null,
       latitude: place?.latitude ?? null,
       longitude: place?.longitude ?? null,
       coverImageUrl: place?.coverImageUrl ?? null,
@@ -49,6 +53,7 @@ export function AddPlaceForm({ place, userId }: { place?: PlaceDetail; userId: s
   });
 
   const isSubmitting = createPlace.isPending || updatePlace.isPending;
+  const address = form.watch('address');
 
   async function onSubmit(values: PlaceFormInput) {
     try {
@@ -58,7 +63,7 @@ export function AddPlaceForm({ place, userId }: { place?: PlaceDetail; userId: s
         router.push(`/places/${place.id}`);
       } else {
         const created = await createPlace.mutateAsync(values);
-        toast.success('Added to your dream list');
+        toast.success('Added to your places');
         router.push(`/places/${created.id}`);
       }
       router.refresh();
@@ -72,12 +77,110 @@ export function AddPlaceForm({ place, userId }: { place?: PlaceDetail; userId: s
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <div className="space-y-2">
+          <Label htmlFor="location-search">📍 Place</Label>
+          {!manualEntry ? (
+            <>
+              <LocationAutocomplete
+                id="location-search"
+                defaultQuery={place?.name ?? ''}
+                onSelect={(result) => {
+                  form.setValue('name', result.name, { shouldValidate: true });
+                  form.setValue('address', result.address);
+                  form.setValue('country', result.country);
+                  form.setValue('countryCode', result.countryCode);
+                  form.setValue('latitude', result.latitude);
+                  form.setValue('longitude', result.longitude);
+                  form.setValue('placeProviderId', result.placeProviderId);
+                }}
+              />
+              {address && <p className="text-xs text-muted-foreground">{address}</p>}
+              {form.formState.errors.name && (
+                <p className="text-[0.8rem] font-medium text-destructive">
+                  {form.formState.errors.name.message}
+                </p>
+              )}
+            </>
+          ) : (
+            <div className="space-y-3 rounded-2xl border border-border/70 bg-card/40 p-4">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Place name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g. Blue Bottle Coffee" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="address"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Address</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Optional" {...field} value={field.value ?? ''} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          )}
+          <button
+            type="button"
+            onClick={() => setManualEntry((current) => !current)}
+            className="text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground"
+          >
+            {manualEntry ? 'Search instead' : "Can't find it? Enter it manually"}
+          </button>
+        </div>
+
+        <FormField
+          control={form.control}
+          name="personalReason"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>❤️ Why do you want to go here?</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Let's watch the sunset here together."
+                  rows={3}
+                  {...field}
+                  value={field.value ?? ''}
+                />
+              </FormControl>
+              <FormDescription>Optional.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="dreamNotes"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>📝 Notes</FormLabel>
+              <FormControl>
+                <Textarea placeholder="Anything else worth remembering" rows={3} {...field} value={field.value ?? ''} />
+              </FormControl>
+              <FormDescription>Optional.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <FormField
           control={form.control}
           name="coverImageUrl"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Cover image</FormLabel>
+              <FormLabel>📷 Cover image</FormLabel>
               <FormControl>
                 <CoverImageUpload
                   value={
@@ -92,107 +195,27 @@ export function AddPlaceForm({ place, userId }: { place?: PlaceDetail; userId: s
                   }}
                 />
               </FormControl>
+              <FormDescription>Optional.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <div className="space-y-2">
-          <Label htmlFor="location-search">Search for a place</Label>
-          <LocationAutocomplete
-            id="location-search"
-            defaultQuery={place ? `${place.city}, ${place.country}` : ''}
-            onSelect={(result) => {
-              form.setValue('city', result.city, { shouldValidate: true });
-              form.setValue('country', result.country, { shouldValidate: true });
-              form.setValue('countryCode', result.countryCode);
-              form.setValue('latitude', result.latitude);
-              form.setValue('longitude', result.longitude);
-            }}
-          />
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2">
+        {isEditing && (
           <FormField
             control={form.control}
-            name="city"
+            name="tags"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>City</FormLabel>
+                <FormLabel>Tags</FormLabel>
                 <FormControl>
-                  <Input placeholder="Kyoto" {...field} />
+                  <TagsInput value={field.value} onChange={field.onChange} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="country"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Country</FormLabel>
-                <FormControl>
-                  <Input placeholder="Japan" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <FormField
-          control={form.control}
-          name="dreamNotes"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Dream notes</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="What do you imagine this place will be like?"
-                  rows={4}
-                  {...field}
-                  value={field.value ?? ''}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="personalReason"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Why this place?</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="A personal reason this is on your list"
-                  rows={3}
-                  {...field}
-                  value={field.value ?? ''}
-                />
-              </FormControl>
-              <FormDescription>Optional — the story behind the dream.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="tags"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Tags</FormLabel>
-              <FormControl>
-                <TagsInput value={field.value} onChange={field.onChange} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        )}
 
         <div className="flex justify-end gap-3">
           <Button type="button" variant="outline" onClick={() => router.back()}>
@@ -200,7 +223,7 @@ export function AddPlaceForm({ place, userId }: { place?: PlaceDetail; userId: s
           </Button>
           <Button type="submit" disabled={isSubmitting}>
             {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
-            {isEditing ? 'Save changes' : 'Add to dream list'}
+            {isEditing ? 'Save changes' : 'Add place'}
           </Button>
         </div>
       </form>

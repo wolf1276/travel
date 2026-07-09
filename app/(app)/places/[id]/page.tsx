@@ -12,8 +12,8 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const place = await prisma.place.findUnique({ where: { id }, select: { city: true } });
-  return { title: place ? `${place.city} — Travel Memories` : 'Travel Memories' };
+  const place = await prisma.place.findUnique({ where: { id }, select: { name: true } });
+  return { title: place ? `${place.name} — Travel Memories` : 'Travel Memories' };
 }
 
 export default async function PlaceDetailPage({ params }: { params: Promise<{ id: string }> }) {

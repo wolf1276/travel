@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Search } from 'lucide-react';
 import { Logo } from '@/components/common/Logo';
 import { UserMenu } from '@/components/layout/UserMenu';
+import { NotificationBell } from '@/components/layout/NotificationBell';
 
 export function TopNav({
   displayName,
@@ -27,6 +28,7 @@ export function TopNav({
         >
           <Search className="h-4 w-4" />
         </Link>
+        <NotificationBell />
         <UserMenu displayName={displayName} email={email} avatarUrl={avatarUrl} />
       </div>
     </header>

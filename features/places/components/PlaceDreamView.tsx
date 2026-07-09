@@ -10,7 +10,7 @@ export function PlaceDreamView({ place }: { place: PlaceDetail }) {
         {place.coverImageUrl ? (
           <ImageWithSkeleton
             src={place.coverImageUrl}
-            alt={`${place.city}, ${place.country}`}
+            alt={place.name}
             fill
             priority
             className="object-cover"
@@ -22,10 +22,12 @@ export function PlaceDreamView({ place }: { place: PlaceDetail }) {
         )}
       </div>
 
-      <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-        <MapPin className="h-4 w-4" />
-        {place.city}, {place.country}
-      </div>
+      {place.address && (
+        <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+          <MapPin className="h-4 w-4" />
+          {place.address}
+        </div>
+      )}
 
       {place.tags.length > 0 && (
         <div className="flex flex-wrap gap-1.5">

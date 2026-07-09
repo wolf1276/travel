@@ -16,9 +16,13 @@ export async function GET() {
     prisma.visit.count({ where: { userId: user.id } }),
   ]);
 
+  const countries = visitedPlaces
+    .map((place) => place.country)
+    .filter((country): country is string => Boolean(country));
+
   return NextResponse.json({
     stats: {
-      countriesVisited: new Set(visitedPlaces.map((place) => place.country)).size,
+      countriesVisited: new Set(countries).size,
       citiesVisited: visitedPlaces.length,
       dreamPlacesRemaining,
       photosUploaded,

@@ -15,7 +15,8 @@ export function serializePlaceListItem(place: PlaceWithRelations): PlaceListItem
 
   return {
     id: place.id,
-    city: place.city,
+    name: place.name,
+    address: place.address,
     country: place.country,
     countryCode: place.countryCode,
     coverImageUrl: place.coverImageUrl,

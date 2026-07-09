@@ -20,8 +20,8 @@ export function SearchResults({
     return (
       <EmptyState
         icon={<SearchX className="h-6 w-6" />}
-        title="Search your travels"
-        description="Look up a place by city, country, or tag — planned or already visited."
+        title="Search your places"
+        description="Look up a place by name, address, or tag — planned or already visited."
       />
     );
   }
@@ -38,7 +38,7 @@ export function SearchResults({
 
   if (!places || places.length === 0) {
     return (
-      <EmptyState icon={<SearchX className="h-6 w-6" />} title="No matches" description="Try a different city, country, or tag." />
+      <EmptyState icon={<SearchX className="h-6 w-6" />} title="No matches" description="Try a different name, address, or tag." />
     );
   }
 

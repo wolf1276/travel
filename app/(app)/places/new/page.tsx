@@ -10,9 +10,9 @@ export default async function NewPlacePage() {
   return (
     <div className="mx-auto max-w-2xl">
       <div className="mb-8">
-        <h1 className="font-serif text-3xl font-semibold text-foreground">Add a dream place</h1>
+        <h1 className="font-serif text-3xl font-semibold text-foreground">Add a place</h1>
         <p className="mt-1.5 text-sm text-muted-foreground">
-          Save somewhere you can&apos;t wait to visit together.
+          Any place you want to visit together — a cafe, a beach, a hidden spot.
         </p>
       </div>
       <AddPlaceForm userId={user.id} />

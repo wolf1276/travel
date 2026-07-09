@@ -14,8 +14,9 @@ export interface Attribution {
 
 export interface PlaceListItem {
   id: string;
-  city: string;
-  country: string;
+  name: string;
+  address: string | null;
+  country: string | null;
   countryCode: string | null;
   coverImageUrl: string | null;
   dreamNotes: string | null;
@@ -55,9 +56,11 @@ export interface PlaceDetail extends PlaceListItem {
 }
 
 export interface CreatePlaceInput {
-  city: string;
-  country: string;
+  name: string;
+  address?: string | null;
+  country?: string | null;
   countryCode?: string | null;
+  placeProviderId?: string | null;
   latitude?: number | null;
   longitude?: number | null;
   coverImageUrl?: string | null;

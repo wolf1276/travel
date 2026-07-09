@@ -30,7 +30,7 @@ export function SearchBar({
         <Input
           value={query}
           onChange={(event) => onQueryChange(event.target.value)}
-          placeholder="Search by city, country, or tag"
+          placeholder="Search by name, address, or tag"
           className="pl-9"
         />
       </div>

@@ -2,9 +2,11 @@ import { z } from 'zod';
 import { RATING_MAX, RATING_MIN } from '@/lib/constants';
 
 export const placeSchema = z.object({
-  city: z.string().trim().min(1, 'City is required').max(100),
-  country: z.string().trim().min(1, 'Country is required').max(100),
+  name: z.string().trim().min(1, 'Place name is required').max(200),
+  address: z.string().trim().max(300).optional().nullable(),
+  country: z.string().trim().max(100).optional().nullable(),
   countryCode: z.string().trim().length(2).optional().nullable(),
+  placeProviderId: z.string().trim().max(300).optional().nullable(),
   latitude: z.number().min(-90).max(90).optional().nullable(),
   longitude: z.number().min(-180).max(180).optional().nullable(),
   coverImageUrl: z.string().url().optional().nullable(),

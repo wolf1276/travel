@@ -8,4 +8,5 @@ export const queryKeys = {
   search: (query: string, filters: string) => ['search', query, filters] as const,
   couple: ['couple'] as const,
   coupleInvite: ['couple', 'invite'] as const,
+  notifications: ['notifications'] as const,
 };

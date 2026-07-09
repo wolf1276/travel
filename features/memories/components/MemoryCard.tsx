@@ -31,7 +31,7 @@ export const MemoryCard = memo(function MemoryCard({ place }: { place: PlaceList
           {coverUrl ? (
             <ImageWithSkeleton
               src={coverUrl}
-              alt={`${place.city}, ${place.country}`}
+              alt={place.name}
               fill
               sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
               className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -53,14 +53,14 @@ export const MemoryCard = memo(function MemoryCard({ place }: { place: PlaceList
         </div>
         <div className="space-y-2 p-5">
           <div className="flex items-baseline justify-between gap-2">
-            <h3 className="truncate font-serif text-lg font-semibold text-foreground">{place.city}</h3>
+            <h3 className="truncate font-serif text-lg font-semibold text-foreground">{place.name}</h3>
             {visit && (
               <span className="shrink-0 text-xs text-muted-foreground">
                 {format(new Date(visit.visitDate), 'MMM d, yyyy')}
               </span>
             )}
           </div>
-          <p className="text-sm text-muted-foreground">{place.country}</p>
+          {place.address && <p className="truncate text-sm text-muted-foreground">{place.address}</p>}
           {showAddedBy && (
             <p className="flex items-center gap-1 text-xs text-muted-foreground">
               <UserRound className="h-3 w-3" />

@@ -22,7 +22,8 @@ export async function GET(request: NextRequest) {
       ...(q
         ? {
             OR: [
-              { city: { contains: q, mode: 'insensitive' } },
+              { name: { contains: q, mode: 'insensitive' } },
+              { address: { contains: q, mode: 'insensitive' } },
               { country: { contains: q, mode: 'insensitive' } },
               { tags: { some: { tag: { name: { contains: q, mode: 'insensitive' } } } } },
             ],

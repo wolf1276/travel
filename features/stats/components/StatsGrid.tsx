@@ -7,7 +7,7 @@ import type { UserStats } from '@/types/stats';
 
 const ITEMS: { key: keyof UserStats; label: string; icon: typeof Globe2 }[] = [
   { key: 'countriesVisited', label: 'Countries Visited', icon: Globe2 },
-  { key: 'citiesVisited', label: 'Cities Visited', icon: MapPinned },
+  { key: 'citiesVisited', label: 'Places Visited', icon: MapPinned },
   { key: 'dreamPlacesRemaining', label: 'Dream Places Remaining', icon: Compass },
   { key: 'photosUploaded', label: 'Photos Uploaded', icon: Camera },
   { key: 'tripsCompleted', label: 'Trips Completed', icon: Plane },
