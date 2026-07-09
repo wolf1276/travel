@@ -19,12 +19,12 @@ export function Logo({
     >
       <span
         aria-hidden="true"
-        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-soft"
+        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary to-rose-gold text-primary-foreground shadow-soft"
       >
         <Heart className="h-4 w-4" strokeWidth={2.25} fill="currentColor" />
       </span>
       {!iconOnly && (
-        <span className="font-serif text-lg font-semibold text-foreground">Travel Memories</span>
+        <span className="font-accent text-xl font-semibold italic text-foreground">Travel Memories</span>
       )}
     </Link>
   );

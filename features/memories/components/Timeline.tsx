@@ -52,15 +52,15 @@ export function Timeline() {
     <div className="space-y-10">
       {years.map((year) => (
         <div key={year}>
-          <h3 className="mb-4 font-serif text-2xl font-semibold text-foreground">{year}</h3>
-          <div className="relative space-y-5 border-l-2 border-dashed border-border pl-6">
+          <h3 className="mb-4 font-accent text-3xl font-semibold italic text-foreground">{year}</h3>
+          <div className="relative space-y-5 border-l-2 border-dashed border-primary/25 pl-6">
             {byYear.get(year)!.map((place) => (
               <Link
                 key={place.id}
                 href={`/places/${place.id}`}
-                className="group relative block rounded-2xl border border-border/70 bg-card/60 p-3.5 shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-elevated sm:p-4"
+                className="group relative block rounded-2xl border border-border/70 bg-card/60 p-3.5 shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-dreamy sm:p-4"
               >
-                <span className="absolute -left-[1.9rem] top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full bg-primary text-primary-foreground ring-4 ring-background">
+                <span className="absolute -left-[1.9rem] top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full bg-gradient-to-br from-primary to-rose-gold text-primary-foreground ring-4 ring-background">
                   <MapPin className="h-2.5 w-2.5" />
                 </span>
                 <div className="flex items-center gap-4">

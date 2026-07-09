@@ -3,74 +3,89 @@
 @tailwind utilities;
 
 @layer base {
-  /* Warm, paper-like light palette is the default (no class needed) so there is
-     no flash before next-themes hydrates and stamps a class on <html>. */
+  /* "Coquette scrapbook" palette — warm ivory + blush/dusty-rose, editorial
+     and handmade rather than corporate. Light is the default (no class
+     needed) so there is no flash before next-themes hydrates and stamps a
+     class on <html>. Never pure black/white — warm charcoal + ivory instead. */
   :root {
-    --background: 32 42% 95%;
-    --foreground: 20 30% 16%;
+    --background: 30 60% 98%;
+    --foreground: 15 24% 20%;
 
-    --card: 30 50% 98%;
-    --card-foreground: 20 30% 16%;
+    --card: 350 45% 99%;
+    --card-foreground: 15 24% 20%;
 
-    --popover: 30 50% 98%;
-    --popover-foreground: 20 30% 16%;
+    --popover: 350 45% 99%;
+    --popover-foreground: 15 24% 20%;
 
-    --primary: 14 68% 56%;
-    --primary-foreground: 30 45% 98%;
+    --primary: 346 58% 66%;
+    --primary-foreground: 350 45% 99%;
 
-    --secondary: 350 40% 90%;
-    --secondary-foreground: 350 35% 28%;
+    --secondary: 335 60% 92%;
+    --secondary-foreground: 345 40% 30%;
 
-    --muted: 30 30% 92%;
-    --muted-foreground: 25 15% 42%;
+    --muted: 28 45% 95%;
+    --muted-foreground: 20 18% 42%;
 
-    --accent: 350 45% 93%;
-    --accent-foreground: 20 30% 16%;
+    --accent: 320 50% 94%;
+    --accent-foreground: 345 35% 25%;
 
-    --destructive: 6 55% 48%;
-    --destructive-foreground: 30 45% 98%;
+    --destructive: 8 62% 56%;
+    --destructive-foreground: 350 45% 98%;
 
-    --success: 100 20% 42%;
-    --success-foreground: 30 45% 98%;
+    --success: 95 22% 44%;
+    --success-foreground: 90 30% 97%;
 
-    --border: 30 25% 87%;
-    --input: 30 25% 87%;
-    --ring: 14 68% 56%;
+    --border: 345 32% 89%;
+    --input: 345 32% 89%;
+    --ring: 346 58% 66%;
 
-    --radius: 1.25rem;
+    /* Extra accent tokens layered on top of the shadcn semantic set — used
+       for decorative moments (favorite stars, badges, gradient washes),
+       not core UI chrome. */
+    --rose-gold: 351 40% 60%;
+    --soft-coral: 12 75% 74%;
+    --sage: 95 22% 55%;
+    --lavender: 300 32% 80%;
+
+    --radius: 1.5rem;
   }
 
   .dark {
-    --background: 20 22% 9%;
-    --foreground: 30 35% 92%;
+    --background: 340 18% 10%;
+    --foreground: 350 30% 92%;
 
-    --card: 20 20% 12%;
-    --card-foreground: 30 35% 92%;
+    --card: 340 16% 13%;
+    --card-foreground: 350 30% 92%;
 
-    --popover: 20 20% 11%;
-    --popover-foreground: 30 35% 92%;
+    --popover: 340 16% 12%;
+    --popover-foreground: 350 30% 92%;
 
-    --primary: 16 72% 60%;
-    --primary-foreground: 20 25% 10%;
+    --primary: 346 55% 68%;
+    --primary-foreground: 340 20% 12%;
 
-    --secondary: 350 20% 18%;
-    --secondary-foreground: 30 30% 88%;
+    --secondary: 340 20% 20%;
+    --secondary-foreground: 345 35% 88%;
 
-    --muted: 20 15% 16%;
-    --muted-foreground: 30 15% 68%;
+    --muted: 340 14% 17%;
+    --muted-foreground: 345 15% 68%;
 
-    --accent: 16 30% 20%;
-    --accent-foreground: 30 30% 92%;
+    --accent: 340 25% 22%;
+    --accent-foreground: 345 35% 92%;
 
-    --destructive: 6 60% 55%;
-    --destructive-foreground: 30 35% 95%;
+    --destructive: 8 60% 58%;
+    --destructive-foreground: 350 30% 95%;
 
-    --success: 100 25% 52%;
-    --success-foreground: 20 22% 9%;
+    --success: 95 20% 55%;
+    --success-foreground: 340 20% 12%;
 
-    --border: 20 15% 20%;
-    --input: 20 15% 20%;
-    --ring: 16 72% 60%;
+    --border: 340 15% 22%;
+    --input: 340 15% 22%;
+    --ring: 346 55% 68%;
+
+    --rose-gold: 351 35% 65%;
+    --soft-coral: 12 65% 68%;
+    --sage: 95 20% 58%;
+    --lavender: 300 25% 74%;
   }
 
   * {
@@ -95,12 +110,24 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-sans), Inter, ui-sans-serif, system-ui, sans-serif;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    background-image:
+      radial-gradient(ellipse 80% 50% at 15% 0%, hsl(var(--secondary) / 0.5), transparent),
+      radial-gradient(ellipse 60% 40% at 100% 20%, hsl(var(--lavender) / 0.18), transparent),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
     background-attachment: fixed;
+  }
+
+  ::selection {
+    background: hsl(var(--primary) / 0.25);
+    color: hsl(var(--foreground));
   }
 }
 
 @layer utilities {
+  .font-accent {
+    font-family: var(--font-accent), var(--font-serif), Georgia, serif;
+  }
+
   /* Hide scrollbar for Chrome, Safari and Opera */
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
@@ -134,4 +161,63 @@
   .masonry-item {
     @apply mb-4 break-inside-avoid;
   }
+
+  /* Polaroid-style photo frame: thick bottom border, slight paper shadow,
+     tiny handmade rotation applied per-card via inline style/data attrs. */
+  .polaroid {
+    @apply rounded-md border border-border/60 bg-card p-2.5 pb-8 shadow-soft;
+  }
+
+  .paper-edge {
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='8' viewBox='0 0 200 8' preserveAspectRatio='none'%3E%3Cpath d='M0 4 Q 5 0 10 4 T 20 4 T 30 4 T 40 4 T 50 4 T 60 4 T 70 4 T 80 4 T 90 4 T 100 4 T 110 4 T 120 4 T 130 4 T 140 4 T 150 4 T 160 4 T 170 4 T 180 4 T 190 4 T 200 4 V8 H0 Z' fill='black'/%3E%3C/svg%3E");
+    mask-size: 100% 100%;
+    mask-repeat: no-repeat;
+  }
+}
+
+/* Lightweight Lenis smooth-scroll hookup — respects prefers-reduced-motion by
+   never mounting the Lenis instance at all (see providers/LenisProvider). */
+html.lenis {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+/* yet-another-react-lightbox theming to match the app's warm palette instead
+   of its default pure-black chrome. */
+.yarl__container {
+  background-color: hsl(var(--foreground) / 0.92) !important;
+}
+
+.yarl__slide_title,
+.yarl__slide_description {
+  font-family: var(--font-sans);
+}
+
+/* Google Maps InfoWindow chrome reskinned to match the app's cards instead of
+   the default Material look. */
+.gm-style .gm-style-iw-c {
+  border-radius: 1rem !important;
+  padding: 0.65rem 0.75rem !important;
+  background: hsl(var(--popover)) !important;
+  box-shadow: 0 12px 40px -12px hsl(var(--foreground) / 0.25) !important;
+}
+
+.gm-style .gm-style-iw-d {
+  overflow: hidden !important;
+}
+
+.gm-style .gm-style-iw-tc::after {
+  background: hsl(var(--popover)) !important;
+}
+
+.gm-style .gm-ui-hover-effect {
+  top: 2px !important;
+  right: 2px !important;
 }

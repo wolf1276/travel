@@ -10,14 +10,14 @@ export function MobileNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-30 flex items-center justify-around border-t border-border/70 bg-card/95 px-2 pb-[max(0.625rem,env(safe-area-inset-bottom))] pt-2.5 backdrop-blur-lg lg:hidden">
+    <nav className="fixed inset-x-0 bottom-0 z-30 flex items-center justify-around rounded-t-3xl border-t border-border/60 bg-card/95 px-2 pb-[max(0.625rem,env(safe-area-inset-bottom))] pt-2.5 shadow-elevated backdrop-blur-lg lg:hidden">
       {NAV_ITEMS.slice(0, 2).map((item) => (
         <MobileNavLink key={item.href} item={item} pathname={pathname} />
       ))}
 
       <Link
         href="/places/new"
-        className="flex h-11 w-11 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-elevated"
+        className="flex h-12 w-12 -translate-y-3 items-center justify-center rounded-full bg-gradient-to-br from-primary to-rose-gold text-primary-foreground shadow-dreamy transition-transform active:scale-95"
         aria-label="Add place"
       >
         <Plus className="h-5 w-5" />

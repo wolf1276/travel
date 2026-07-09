@@ -55,6 +55,10 @@ const config: Config = {
           DEFAULT: 'hsl(var(--success))',
           foreground: 'hsl(var(--success-foreground))',
         },
+        'rose-gold': 'hsl(var(--rose-gold))',
+        'soft-coral': 'hsl(var(--soft-coral))',
+        sage: 'hsl(var(--sage))',
+        lavender: 'hsl(var(--lavender))',
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -62,10 +66,13 @@ const config: Config = {
         sm: 'calc(var(--radius) - 4px)',
         xl: 'calc(var(--radius) + 4px)',
         '2xl': 'calc(var(--radius) + 12px)',
+        '3xl': 'calc(var(--radius) + 20px)',
       },
       boxShadow: {
         soft: '0 2px 20px -4px hsl(var(--foreground) / 0.08)',
         elevated: '0 12px 40px -12px hsl(var(--foreground) / 0.25)',
+        dreamy: '0 1px 2px hsl(var(--foreground) / 0.04), 0 24px 48px -20px hsl(var(--primary) / 0.35)',
+        polaroid: '0 1px 1px hsl(var(--foreground) / 0.06), 0 10px 24px -8px hsl(var(--foreground) / 0.16)',
       },
       keyframes: {
         'accordion-down': {
@@ -84,16 +91,27 @@ const config: Config = {
           from: { opacity: '0', transform: 'translateY(8px)' },
           to: { opacity: '1', transform: 'translateY(0)' },
         },
+        float: {
+          '0%, 100%': { transform: 'translateY(0) rotate(-1deg)' },
+          '50%': { transform: 'translateY(-8px) rotate(1deg)' },
+        },
+        shimmer: {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'fade-in': 'fade-in 0.3s ease-out',
         'fade-up': 'fade-up 0.4s ease-out',
+        float: 'float 6s ease-in-out infinite',
+        shimmer: 'shimmer 2.5s linear infinite',
       },
       fontFamily: {
         sans: ['var(--font-sans)', 'ui-sans-serif', 'system-ui'],
         serif: ['var(--font-serif)', 'Georgia', 'serif'],
+        accent: ['var(--font-accent)', 'var(--font-serif)', 'Georgia', 'serif'],
       },
     },
   },

@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Sparkles } from 'lucide-react';
+import { useReducedMotion } from 'framer-motion';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -15,6 +16,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Confetti } from '@/components/common/Confetti';
 import { DatePicker } from '@/components/common/DatePicker';
 import { RatingStars } from '@/components/common/RatingStars';
 import { PhotoDropzone, type PendingPhoto } from '@/features/memories/components/PhotoDropzone';
@@ -33,12 +35,14 @@ export function MarkAsVisitedModal({
 }) {
   const router = useRouter();
   const markAsVisited = useMarkAsVisited(placeId);
+  const reduceMotion = useReducedMotion();
 
   const [visitDate, setVisitDate] = useState<Date | null>(new Date());
   const [rating, setRating] = useState<number | null>(null);
   const [journal, setJournal] = useState('');
   const [photos, setPhotos] = useState<PendingPhoto[]>([]);
   const [favoriteIndex, setFavoriteIndex] = useState<number | null>(null);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   async function handleSubmit() {
     if (!visitDate) {
@@ -55,6 +59,10 @@ export function MarkAsVisitedModal({
         favoritePhotoIndex: favoriteIndex,
       });
       toast.success('Memory saved');
+      if (!reduceMotion) {
+        setShowConfetti(true);
+        setTimeout(() => setShowConfetti(false), 1000);
+      }
       onOpenChange(false);
       router.refresh();
     } catch {
@@ -65,10 +73,15 @@ export function MarkAsVisitedModal({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <>
+      {showConfetti && <Confetti />}
+      <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[85dvh] overflow-y-auto sm:max-w-xl">
         <DialogHeader>
-          <DialogTitle>Mark as visited</DialogTitle>
+          <DialogTitle className="flex items-center gap-2">
+            <Sparkles className="h-4 w-4 text-primary" />
+            Mark as visited
+          </DialogTitle>
           <DialogDescription>Turn this dream into a memory.</DialogDescription>
         </DialogHeader>
 
@@ -118,6 +131,7 @@ export function MarkAsVisitedModal({
           </Button>
         </DialogFooter>
       </DialogContent>
-    </Dialog>
+      </Dialog>
+    </>
   );
 }

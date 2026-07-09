@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Balancer from 'react-wrap-balancer';
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { DreamyBackdrop } from '@/components/decor/DreamyBackdrop';
 import { WantToVisitGrid } from '@/features/places/components/WantToVisitGrid';
 import { MemoriesGrid } from '@/features/memories/components/MemoriesGrid';
 import { RecentMoments } from '@/features/memories/components/RecentMoments';
@@ -13,11 +15,16 @@ export const metadata: Metadata = { title: 'Dashboard — Travel Memories' };
 export default function DashboardPage() {
   return (
     <div className="space-y-14">
-      <section className="space-y-1.5">
+      <section className="relative space-y-1.5 overflow-hidden">
+        <DreamyBackdrop className="pointer-events-none absolute inset-0 -z-10 -mx-6 h-56 opacity-70 sm:-mx-8" count={12} />
         <p className="text-sm font-medium text-primary">Welcome back</p>
-        <h1 className="font-serif text-3xl font-semibold text-foreground sm:text-4xl">Our story so far</h1>
+        <h1 className="font-accent text-4xl font-semibold italic text-foreground sm:text-5xl">
+          <Balancer>Our story so far</Balancer>
+        </h1>
         <p className="max-w-xl text-sm text-muted-foreground sm:text-base">
-          Every dream you&apos;ve saved and every place you&apos;ve made real, gathered in one cozy book.
+          <Balancer>
+            Every dream you&apos;ve saved and every place you&apos;ve made real, gathered in one cozy book.
+          </Balancer>
         </p>
       </section>
 

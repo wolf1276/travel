@@ -1,5 +1,6 @@
 import { Logo } from '@/components/common/Logo';
 import { PageTransition } from '@/components/layout/PageTransition';
+import { DreamyBackdrop } from '@/components/decor/DreamyBackdrop';
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -11,6 +12,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             'radial-gradient(60% 50% at 50% 0%, hsl(var(--primary) / 0.16), transparent 70%)',
         }}
       />
+      <DreamyBackdrop count={14} />
       <div className="mb-8">
         <Logo href="/" />
       </div>

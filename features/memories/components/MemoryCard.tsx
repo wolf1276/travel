@@ -8,26 +8,34 @@ import { Camera, ImageOff, UserRound } from 'lucide-react';
 import { ImageWithSkeleton } from '@/components/common/ImageWithSkeleton';
 import { RatingStars } from '@/components/common/RatingStars';
 import { useCouple } from '@/hooks/useCouple';
+import { tiltForId } from '@/lib/rotation';
 import type { PlaceListItem } from '@/types/place';
 
-export const MemoryCard = memo(function MemoryCard({ place }: { place: PlaceListItem }) {
+export const MemoryCard = memo(function MemoryCard({
+  place,
+  index = 0,
+}: {
+  place: PlaceListItem;
+  index?: number;
+}) {
   const visit = place.visit;
   const coverUrl = visit?.favoritePhotoUrl ?? place.coverImageUrl;
   const { data: couple } = useCouple();
   const showAddedBy = (couple?.members.length ?? 0) > 1;
+  const tilt = tiltForId(place.id) * -1;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -4 }}
-      transition={{ duration: 0.3, ease: 'easeOut' }}
+      initial={{ opacity: 0, y: 16, rotate: 0 }}
+      animate={{ opacity: 1, y: 0, rotate: tilt }}
+      whileHover={{ y: -6, rotate: 0, scale: 1.02 }}
+      transition={{ duration: 0.35, ease: 'easeOut', delay: Math.min(index * 0.05, 0.4) }}
     >
       <Link
         href={`/places/${place.id}`}
-        className="group block overflow-hidden rounded-3xl border border-border/70 bg-card shadow-soft transition-shadow hover:shadow-elevated"
+        className="polaroid group block bg-card shadow-polaroid transition-shadow hover:shadow-dreamy"
       >
-        <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
+        <div className="relative aspect-[4/3] w-full overflow-hidden rounded-sm bg-muted">
           {coverUrl ? (
             <ImageWithSkeleton
               src={coverUrl}
@@ -41,7 +49,7 @@ export const MemoryCard = memo(function MemoryCard({ place }: { place: PlaceList
               <ImageOff className="h-8 w-8" />
             </div>
           )}
-          <span className="absolute left-3 top-3 rounded-full bg-background/90 px-2.5 py-1 text-[11px] font-medium text-success shadow-soft backdrop-blur-sm">
+          <span className="absolute left-2.5 top-2.5 rounded-full bg-background/90 px-2.5 py-1 text-[11px] font-medium text-success shadow-soft backdrop-blur-sm">
             ❤️ Memory
           </span>
           {visit && (
@@ -51,9 +59,9 @@ export const MemoryCard = memo(function MemoryCard({ place }: { place: PlaceList
             </div>
           )}
         </div>
-        <div className="space-y-2 p-5">
+        <div className="space-y-1.5 px-1.5 pt-3">
           <div className="flex items-baseline justify-between gap-2">
-            <h3 className="truncate font-serif text-lg font-semibold text-foreground">{place.name}</h3>
+            <h3 className="truncate font-accent text-lg font-semibold text-foreground">{place.name}</h3>
             {visit && (
               <span className="shrink-0 text-xs text-muted-foreground">
                 {format(new Date(visit.visitDate), 'MMM d, yyyy')}

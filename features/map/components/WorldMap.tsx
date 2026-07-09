@@ -3,16 +3,18 @@
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
-import Map, { Marker, NavigationControl, Popup } from 'react-map-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
-import { Map as MapIcon, MapPin } from 'lucide-react';
+import { APIProvider, InfoWindow, Map, Marker } from '@vis.gl/react-google-maps';
+import { Map as MapIcon } from 'lucide-react';
 import { EmptyState } from '@/components/common/EmptyState';
 import { Skeleton } from '@/components/ui/skeleton';
 import { usePlaces } from '@/hooks/usePlaces';
-import { cn } from '@/lib/utils';
+import { romanticMapStyleDark, romanticMapStyleLight } from '@/features/map/lib/mapStyles';
 import type { PlaceListItem } from '@/types/place';
 
-const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
+const GOOGLE_MAPS_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+
+const DREAM_PIN_COLOR = '#db768d';
+const MEMORY_PIN_COLOR = '#718f5c';
 
 type MappablePlace = PlaceListItem & {
   latitude: number;
@@ -20,7 +22,17 @@ type MappablePlace = PlaceListItem & {
   kind: 'dream' | 'memory';
 };
 
-export function WorldMap() {
+function buildPinIcon(color: string, active: boolean): google.maps.Icon {
+  const size = active ? 40 : 32;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24"><path d="M12 0C7.03 0 3 4.03 3 9c0 6.25 9 15 9 15s9-8.75 9-15c0-4.97-4.03-9-9-9z" fill="${color}" stroke="#fffdf9" stroke-width="1.2"/><circle cx="12" cy="9" r="3.4" fill="#fffdf9"/></svg>`;
+  return {
+    url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`,
+    scaledSize: new google.maps.Size(size, size),
+    anchor: new google.maps.Point(size / 2, size - 1),
+  };
+}
+
+function WorldMapInner() {
   const router = useRouter();
   const { resolvedTheme } = useTheme();
   const { data: wantToVisit, isLoading: isLoadingDreams } = usePlaces('WANT_TO_VISIT');
@@ -39,77 +51,75 @@ export function WorldMap() {
     return [...withCoords(wantToVisit, 'dream'), ...withCoords(visited, 'memory')];
   }, [wantToVisit, visited]);
 
-  if (!MAPBOX_TOKEN) {
-    return (
-      <EmptyState
-        icon={<MapIcon className="h-6 w-6" />}
-        title="Map not connected yet"
-        description="Add NEXT_PUBLIC_MAPBOX_TOKEN to your environment to see your places on an interactive world map."
-      />
-    );
+  if (isLoading) {
+    return <Skeleton className="h-[calc(100dvh-13rem)] min-h-[420px] w-full rounded-[2rem]" />;
   }
 
   const activePlace = points.find((place) => place.id === activeId) ?? null;
 
-  if (isLoading) {
-    return <Skeleton className="h-[calc(100dvh-13rem)] min-h-[420px] w-full rounded-2xl" />;
-  }
-
   return (
-    <div className="h-[calc(100dvh-13rem)] min-h-[420px] w-full overflow-hidden rounded-3xl border border-border/70 shadow-soft">
+    <div className="h-[calc(100dvh-13rem)] min-h-[420px] w-full overflow-hidden rounded-[2rem] border border-border/70 shadow-soft">
       <Map
-        mapboxAccessToken={MAPBOX_TOKEN}
-        initialViewState={{ longitude: 10, latitude: 20, zoom: 1.4 }}
-        mapStyle={
-          resolvedTheme === 'dark' ? 'mapbox://styles/mapbox/dark-v11' : 'mapbox://styles/mapbox/light-v11'
-        }
+        defaultCenter={{ lat: 20, lng: 10 }}
+        defaultZoom={1.4}
+        minZoom={1.2}
+        gestureHandling="greedy"
+        disableDefaultUI
+        zoomControl
+        styles={resolvedTheme === 'dark' ? romanticMapStyleDark : romanticMapStyleLight}
         style={{ width: '100%', height: '100%' }}
         onClick={() => setActiveId(null)}
       >
-        <NavigationControl position="top-right" />
-
         {points.map((place) => (
           <Marker
             key={place.id}
-            longitude={place.longitude}
-            latitude={place.latitude}
-            anchor="bottom"
-            onClick={(event) => {
-              event.originalEvent.stopPropagation();
-              setActiveId(place.id);
-            }}
-          >
-            <MapPin
-              className={cn(
-                'h-7 w-7 cursor-pointer drop-shadow-md transition-transform hover:scale-110',
-                place.kind === 'memory' ? 'fill-success text-success' : 'fill-primary text-primary',
-              )}
-            />
-          </Marker>
+            position={{ lat: place.latitude, lng: place.longitude }}
+            icon={buildPinIcon(
+              place.kind === 'memory' ? MEMORY_PIN_COLOR : DREAM_PIN_COLOR,
+              activeId === place.id,
+            )}
+            onClick={() => setActiveId(place.id)}
+          />
         ))}
 
         {activePlace && (
-          <Popup
-            longitude={activePlace.longitude}
-            latitude={activePlace.latitude}
-            anchor="top"
-            onClose={() => setActiveId(null)}
-            closeButton={false}
-            className="[&_.mapboxgl-popup-content]:rounded-xl [&_.mapboxgl-popup-content]:bg-popover [&_.mapboxgl-popup-content]:p-0 [&_.mapboxgl-popup-content]:text-popover-foreground [&_.mapboxgl-popup-content]:shadow-elevated [&_.mapboxgl-popup-tip]:border-t-popover"
+          <InfoWindow
+            position={{ lat: activePlace.latitude, lng: activePlace.longitude }}
+            onCloseClick={() => setActiveId(null)}
+            headerDisabled
+            pixelOffset={[0, -8]}
           >
             <button
               type="button"
               onClick={() => router.push(`/places/${activePlace.id}`)}
-              className="flex flex-col gap-0.5 px-3 py-2 text-left"
+              className="flex max-w-[220px] flex-col gap-0.5 rounded-lg px-1 py-1 text-left"
             >
-              <span className="text-sm font-medium">{activePlace.name}</span>
+              <span className="font-serif text-sm font-semibold text-foreground">{activePlace.name}</span>
               {activePlace.address && (
-                <span className="text-xs text-muted-foreground">{activePlace.address}</span>
+                <span className="truncate text-xs text-muted-foreground">{activePlace.address}</span>
               )}
             </button>
-          </Popup>
+          </InfoWindow>
         )}
       </Map>
     </div>
+  );
+}
+
+export function WorldMap() {
+  if (!GOOGLE_MAPS_KEY) {
+    return (
+      <EmptyState
+        icon={<MapIcon className="h-6 w-6" />}
+        title="Map not connected yet"
+        description="Add NEXT_PUBLIC_GOOGLE_MAPS_API_KEY to your environment to see your places on an interactive world map."
+      />
+    );
+  }
+
+  return (
+    <APIProvider apiKey={GOOGLE_MAPS_KEY}>
+      <WorldMapInner />
+    </APIProvider>
   );
 }
