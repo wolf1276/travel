@@ -13,8 +13,8 @@ export default async function InviteAcceptPage({
 }: {
   params: Promise<{ token: string }>;
 }) {
-  const user = await requireServerUser();
   const { token } = await params;
+  const user = await requireServerUser(`/invite/${token}`);
 
   const invite = await prisma.coupleInvite.findUnique({
     where: { token },

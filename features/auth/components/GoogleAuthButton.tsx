@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -31,14 +32,19 @@ function GoogleIcon() {
 
 export function GoogleAuthButton() {
   const [isLoading, setIsLoading] = useState(false);
+  const searchParams = useSearchParams();
 
   async function handleClick() {
     setIsLoading(true);
     const supabase = createClient();
+    const next = searchParams.get('next');
+    const callbackUrl = new URL('/auth/callback', window.location.origin);
+    if (next) callbackUrl.searchParams.set('next', next);
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: callbackUrl.toString(),
       },
     });
 

@@ -50,8 +50,8 @@ export async function getServerUser(): Promise<User | null> {
   }
 }
 
-export async function requireServerUser(): Promise<User> {
+export async function requireServerUser(next?: string): Promise<User> {
   const user = await getServerUser();
-  if (!user) redirect('/login');
+  if (!user) redirect(next ? `/login?next=${encodeURIComponent(next)}` : '/login');
   return user;
 }

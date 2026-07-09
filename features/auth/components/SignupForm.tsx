@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Loader2, MailCheck } from 'lucide-react';
@@ -25,6 +25,7 @@ import { createClient } from '@/services/supabase/client';
 
 export function SignupForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [awaitingConfirmation, setAwaitingConfirmation] = useState(false);
 
@@ -36,12 +37,16 @@ export function SignupForm() {
   async function onSubmit(values: SignupInput) {
     setIsSubmitting(true);
     const supabase = createClient();
+    const next = searchParams.get('next');
+    const callbackUrl = new URL('/auth/callback', window.location.origin);
+    if (next) callbackUrl.searchParams.set('next', next);
+
     const { data, error } = await supabase.auth.signUp({
       email: values.email,
       password: values.password,
       options: {
         data: { full_name: values.displayName },
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        emailRedirectTo: callbackUrl.toString(),
       },
     });
 
@@ -52,7 +57,7 @@ export function SignupForm() {
     }
 
     if (data.session) {
-      router.push('/dashboard');
+      router.push(next ?? '/dashboard');
       router.refresh();
       return;
     }

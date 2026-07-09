@@ -131,3 +131,35 @@ create policy "Couple members manage their couple's place_tags" on public.place_
         and users.id = auth.uid()::text
     )
   );
+
+-- Storage: the "photos" bucket is public (object *downloads* bypass RLS by
+-- design, via /storage/v1/object/public/...), but the Storage API's list/
+-- read-metadata operations still go through these policies. Objects are
+-- uploaded into a folder named after the uploader's auth uid
+-- (see services/supabase/storage.ts), so folder-name equality below is the
+-- ownership check. A blanket `using (bucket_id = 'photos')` SELECT policy
+-- would let anyone enumerate every couple's file paths via `.list()`, even
+-- though the app itself never calls it, so it's scoped to the owner's own
+-- folder like the delete/insert policies.
+drop policy if exists "Public read access to photos bucket" on storage.objects;
+
+create policy "Users list/read their own objects" on storage.objects
+  for select
+  using (
+    bucket_id = 'photos'
+    and (storage.foldername(name))[1] = (auth.uid())::text
+  );
+
+create policy "Users upload into their own folder" on storage.objects
+  for insert
+  with check (
+    bucket_id = 'photos'
+    and (storage.foldername(name))[1] = (auth.uid())::text
+  );
+
+create policy "Users delete their own objects" on storage.objects
+  for delete
+  using (
+    bucket_id = 'photos'
+    and (storage.foldername(name))[1] = (auth.uid())::text
+  );

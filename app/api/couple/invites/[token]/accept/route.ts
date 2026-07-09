@@ -36,14 +36,39 @@ export async function POST(
     return NextResponse.json({ error: 'You already have a travel partner' }, { status: 409 });
   }
 
-  const couple = await prisma.$transaction(async (tx) => {
-    await tx.user.update({ where: { id: user.id }, data: { coupleId: invite.coupleId } });
-    await tx.coupleInvite.update({
-      where: { id: invite.id },
-      data: { status: 'ACCEPTED', acceptedById: user.id },
-    });
-    return tx.couple.findUniqueOrThrow({ where: { id: invite.coupleId }, include: { members: true } });
-  });
+  try {
+    const couple = await prisma.$transaction(async (tx) => {
+      // Atomically claim the invite: if another concurrent request (double
+      // click, two tabs/devices) already flipped it out of PENDING, this
+      // update affects zero rows and we abort instead of double-joining.
+      const claimed = await tx.coupleInvite.updateMany({
+        where: { id: invite.id, status: 'PENDING' },
+        data: { status: 'ACCEPTED', acceptedById: user.id },
+      });
+      if (claimed.count === 0) {
+        throw new Error('INVITE_ALREADY_CLAIMED');
+      }
 
-  return NextResponse.json({ couple: serializeCouple(couple) });
+      const targetCouple = await tx.couple.findUniqueOrThrow({
+        where: { id: invite.coupleId },
+        include: { members: true },
+      });
+      if (targetCouple.members.length >= 2) {
+        throw new Error('COUPLE_FULL');
+      }
+
+      await tx.user.update({ where: { id: user.id }, data: { coupleId: invite.coupleId } });
+      return tx.couple.findUniqueOrThrow({ where: { id: invite.coupleId }, include: { members: true } });
+    });
+
+    return NextResponse.json({ couple: serializeCouple(couple) });
+  } catch (error) {
+    if (error instanceof Error && error.message === 'INVITE_ALREADY_CLAIMED') {
+      return NextResponse.json({ error: 'This invite is no longer valid' }, { status: 410 });
+    }
+    if (error instanceof Error && error.message === 'COUPLE_FULL') {
+      return NextResponse.json({ error: 'This couple already has a travel partner' }, { status: 409 });
+    }
+    throw error;
+  }
 }
