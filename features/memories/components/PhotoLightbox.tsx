@@ -57,7 +57,7 @@ export function PhotoLightbox({
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-white hover:bg-white/20"
+            className="absolute right-[max(0.75rem,env(safe-area-inset-right))] top-[max(0.75rem,env(safe-area-inset-top))] flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20"
           >
             <X className="h-5 w-5" />
           </button>
@@ -71,7 +71,7 @@ export function PhotoLightbox({
                   goPrev();
                 }}
                 aria-label="Previous photo"
-                className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-2 text-white hover:bg-white/20"
+                className="absolute left-2 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 sm:left-4"
               >
                 <ChevronLeft className="h-5 w-5" />
               </button>
@@ -82,7 +82,7 @@ export function PhotoLightbox({
                   goNext();
                 }}
                 aria-label="Next photo"
-                className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-2 text-white hover:bg-white/20"
+                className="absolute right-2 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 sm:right-4"
               >
                 <ChevronRight className="h-5 w-5" />
               </button>
@@ -93,7 +93,7 @@ export function PhotoLightbox({
             key={photo.id}
             initial={{ scale: 0.96, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="relative max-h-[85vh] max-w-4xl"
+            className="relative max-h-[85dvh] max-w-4xl"
             onClick={(event) => event.stopPropagation()}
           >
             <ImageWithSkeleton
@@ -101,7 +101,7 @@ export function PhotoLightbox({
               alt={photo.caption || 'Travel photo'}
               width={photo.width ?? 1200}
               height={photo.height ?? 900}
-              className="max-h-[85vh] w-auto rounded-2xl object-contain"
+              className="max-h-[85dvh] w-auto rounded-2xl object-contain"
             />
             {photo.isFavorite && (
               <div className="absolute left-3 top-3 flex items-center gap-1 rounded-full bg-black/60 px-2.5 py-1 text-xs font-medium text-amber-300">

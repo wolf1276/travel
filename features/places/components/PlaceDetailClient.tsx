@@ -38,7 +38,7 @@ export function PlaceDetailClient({ place, userId }: { place: PlaceDetail; userI
     <div className="mx-auto max-w-3xl">
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <h1 className="font-serif text-3xl font-semibold text-foreground">{place.city}</h1>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {!isVisited && (
             <Button onClick={() => setVisitModalOpen(true)}>
               <Sparkles className="h-4 w-4" />

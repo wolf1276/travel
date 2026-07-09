@@ -15,11 +15,11 @@ export function AppShell({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-dvh bg-background">
       <Sidebar />
       <div className="flex flex-col lg:pl-64">
         <TopNav displayName={displayName} email={email} avatarUrl={avatarUrl} />
-        <main className="flex-1 px-4 pb-24 pt-6 sm:px-6 lg:px-8 lg:pb-10">
+        <main className="flex-1 px-4 pb-[calc(6rem+env(safe-area-inset-bottom))] pt-6 sm:px-6 lg:px-8 lg:pb-10">
           <PageTransition>{children}</PageTransition>
         </main>
       </div>

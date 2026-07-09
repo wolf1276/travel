@@ -54,7 +54,12 @@ export function TagsInput({
               className="inline-flex items-center gap-1 rounded-full bg-secondary px-3 py-1 text-xs font-medium"
             >
               {tag}
-              <button type="button" onClick={() => removeTag(tag)} aria-label={`Remove ${tag}`}>
+              <button
+                type="button"
+                onClick={() => removeTag(tag)}
+                aria-label={`Remove ${tag}`}
+                className="-m-1.5 p-1.5"
+              >
                 <X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
               </button>
             </span>

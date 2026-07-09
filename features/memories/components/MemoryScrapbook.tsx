@@ -98,7 +98,7 @@ export function MemoryScrapbook({ place, userId }: { place: PlaceDetail; userId:
           </div>
           {visit.rating !== null && (
             <>
-              <div className="h-8 w-px bg-border" />
+              <div className="hidden h-8 w-px bg-border sm:block" />
               <div>
                 <p className="text-xs text-muted-foreground">Rating</p>
                 <RatingStars value={visit.rating} />
@@ -112,7 +112,7 @@ export function MemoryScrapbook({ place, userId }: { place: PlaceDetail; userId:
           </div>
           {showAttribution && (
             <>
-              <div className="h-8 w-px bg-border" />
+              <div className="hidden h-8 w-px bg-border sm:block" />
               <p className="flex items-center gap-1 text-xs text-muted-foreground">
                 <UserRound className="h-3 w-3" />
                 Visited by {visit.visitedBy.displayName ?? visit.visitedBy.email}

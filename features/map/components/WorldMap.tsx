@@ -52,11 +52,11 @@ export function WorldMap() {
   const activePlace = points.find((place) => place.id === activeId) ?? null;
 
   if (isLoading) {
-    return <Skeleton className="h-[calc(100vh-13rem)] min-h-[420px] w-full rounded-2xl" />;
+    return <Skeleton className="h-[calc(100dvh-13rem)] min-h-[420px] w-full rounded-2xl" />;
   }
 
   return (
-    <div className="h-[calc(100vh-13rem)] min-h-[420px] w-full overflow-hidden rounded-3xl border border-border/70 shadow-soft">
+    <div className="h-[calc(100dvh-13rem)] min-h-[420px] w-full overflow-hidden rounded-3xl border border-border/70 shadow-soft">
       <Map
         mapboxAccessToken={MAPBOX_TOKEN}
         initialViewState={{ longitude: 10, latitude: 20, zoom: 1.4 }}

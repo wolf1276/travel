@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter, Playfair_Display } from 'next/font/google';
 import './globals.css';
 import { Providers } from '@/providers';
@@ -21,6 +21,12 @@ export const metadata: Metadata = {
     template: '%s',
   },
   description: 'A personal travel scrapbook for the places you dream of and the ones you remember.',
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

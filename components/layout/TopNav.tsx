@@ -22,7 +22,7 @@ export function TopNav({
       <div className="flex items-center gap-3">
         <Link
           href="/search"
-          className="flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+          className="flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground max-sm:h-11 max-sm:w-11"
           aria-label="Search"
         >
           <Search className="h-4 w-4" />

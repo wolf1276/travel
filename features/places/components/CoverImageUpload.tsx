@@ -89,7 +89,7 @@ export function CoverImageUpload({
             size="icon"
             variant="secondary"
             onClick={handleRemove}
-            className="absolute right-3 top-3 h-8 w-8 rounded-full shadow-elevated"
+            className="absolute right-3 top-3 h-8 w-8 rounded-full shadow-elevated max-sm:h-11 max-sm:w-11"
             aria-label="Remove cover image"
           >
             <X className="h-4 w-4" />

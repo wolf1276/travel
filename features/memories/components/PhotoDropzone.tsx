@@ -120,12 +120,15 @@ export function PhotoDropzone({
               className="group relative aspect-square overflow-hidden rounded-2xl border border-border/70"
             >
               <Image src={photo.url} alt="" fill className="object-cover" />
-              <div className="absolute inset-0 flex items-start justify-between bg-gradient-to-b from-black/40 via-transparent to-transparent p-1.5 opacity-0 transition-opacity group-hover:opacity-100">
+              <div className="absolute inset-0 flex items-start justify-between bg-gradient-to-b from-black/40 via-transparent to-transparent p-1 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100">
                 <button
                   type="button"
                   onClick={() => onFavoriteChange(index)}
                   aria-label="Set as favorite photo"
-                  className={cn('rounded-full bg-black/50 p-1', favoriteIndex === index && 'text-amber-300')}
+                  className={cn(
+                    'flex h-8 w-8 items-center justify-center rounded-full bg-black/50',
+                    favoriteIndex === index && 'text-amber-300',
+                  )}
                 >
                   <Star className={cn('h-3.5 w-3.5', favoriteIndex === index && 'fill-current')} />
                 </button>
@@ -133,7 +136,7 @@ export function PhotoDropzone({
                   type="button"
                   onClick={() => removePhoto(index)}
                   aria-label="Remove photo"
-                  className="rounded-full bg-black/50 p-1 text-white"
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-black/50 text-white"
                 >
                   <X className="h-3.5 w-3.5" />
                 </button>
